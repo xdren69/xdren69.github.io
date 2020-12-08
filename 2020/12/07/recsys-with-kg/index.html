@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>知识图谱与推荐系统 - Xdren&#039;s blog</title><meta description="这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"><meta property="og:type" content="blog"><meta property="og:title" content="知识图谱与推荐系统"><meta property="og:url" content="https://xdren69.github.io/2020/12/07/recsys-with-kg/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/07/195138-327292.png"><meta property="og:image" content="c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201207201827038.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/094120-752547.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103758-690420.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105331-105180.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105941-300239.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110015-781535.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110840-705446.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/111124-888823.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/100654-5848.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101319-125780.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101544-573368.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/14/085000-230172.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102721-583322.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102741-163332.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/211722-856032.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212035-678806.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212531-251331.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/213545-632304.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215206-491006.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215346-56410.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221542-863577.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221629-782447.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/222853-559517.png"><meta property="article:published_time" content="2020-12-07T14:03:20.000Z"><meta property="article:modified_time" content="2020-12-08T02:02:10.265Z"><meta property="article:author" content="Xdren"><meta property="article:tag" content="item recommendation"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2020/12/07/recsys-with-kg/"},"headline":"Xdren's blog","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/07/195138-327292.png","c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201207201827038.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/094120-752547.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103758-690420.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105331-105180.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105941-300239.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110015-781535.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110840-705446.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/111124-888823.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/100654-5848.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101319-125780.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101544-573368.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/14/085000-230172.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102721-583322.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102741-163332.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/211722-856032.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212035-678806.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212531-251331.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/213545-632304.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215206-491006.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215346-56410.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221542-863577.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221629-782447.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/222853-559517.png"],"datePublished":"2020-12-07T14:03:20.000Z","dateModified":"2020-12-08T02:02:10.265Z","author":{"@type":"Person","name":"Xdren"},"description":"这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"}</script><link rel="canonical" href="https://xdren69.github.io/2020/12/07/recsys-with-kg/"><link rel="icon" href="/images/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var _hmt = _hmt || [];
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>知识图谱与推荐系统 - Xdren&#039;s blog</title><meta description="这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"><meta property="og:type" content="blog"><meta property="og:title" content="知识图谱与推荐系统"><meta property="og:url" content="https://xdren69.github.io/2020/12/07/recsys-with-kg/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/07/195138-327292.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/08/101653-986811.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/094120-752547.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103758-690420.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105331-105180.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105941-300239.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110015-781535.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110840-705446.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/111124-888823.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/100654-5848.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101319-125780.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101544-573368.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/14/085000-230172.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102721-583322.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102741-163332.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/211722-856032.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212035-678806.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212531-251331.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/213545-632304.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215206-491006.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215346-56410.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221542-863577.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221629-782447.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/222853-559517.png"><meta property="article:published_time" content="2020-12-07T14:03:20.000Z"><meta property="article:modified_time" content="2020-12-08T02:16:58.927Z"><meta property="article:author" content="Xdren"><meta property="article:tag" content="item recommendation"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2020/12/07/recsys-with-kg/"},"headline":"Xdren's blog","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/07/195138-327292.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/08/101653-986811.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/094120-752547.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103758-690420.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105331-105180.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/105941-300239.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110015-781535.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/110840-705446.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/111124-888823.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/100654-5848.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101319-125780.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/101544-573368.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/14/085000-230172.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102721-583322.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/102741-163332.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/211722-856032.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212035-678806.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/212531-251331.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/13/213545-632304.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215206-491006.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/215346-56410.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221542-863577.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/221629-782447.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/04/222853-559517.png"],"datePublished":"2020-12-07T14:03:20.000Z","dateModified":"2020-12-08T02:16:58.927Z","author":{"@type":"Person","name":"Xdren"},"description":"这是一篇对于推荐系统领域与知识图谱相结合的工作的调研"}</script><link rel="canonical" href="https://xdren69.github.io/2020/12/07/recsys-with-kg/"><link rel="icon" href="/images/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var _hmt = _hmt || [];
         (function() {
             var hm = document.createElement("script");
             hm.src = "//hm.baidu.com/hm.js?14e57ad6d6de6c90603b6bea2182917a";
@@ -10,7 +10,7 @@
         gtag('js', new Date());
     
         gtag('config', 'UA-170595403-1');</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><link rel="alternate" href="/atom.xml" title="Xdren's blog" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/images/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-12-07T14:03:20.000Z" title="2020-12-07T14:03:20.000Z">2020-12-07</time><span class="level-item"><a class="link-muted" href="/categories/recsys/">recsys</a></span><span class="level-item">25 分钟 读完 (大约 3780 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><i class="far fa-eye"></i>&nbsp;&nbsp;<span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">知识图谱与推荐系统</h1><div class="content"><h2 id="论文阅读"><a href="#论文阅读" class="headerlink" title="论文阅读"></a>论文阅读</h2><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png" alt=""></p>
+</head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/images/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-12-07T14:03:20.000Z" title="2020-12-07T14:03:20.000Z">2020-12-07</time><span class="level-item"><a class="link-muted" href="/categories/recsys/">recsys</a></span><span class="level-item">25 分钟 读完 (大约 3730 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><i class="far fa-eye"></i>&nbsp;&nbsp;<span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">知识图谱与推荐系统</h1><div class="content"><h2 id="论文阅读"><a href="#论文阅读" class="headerlink" title="论文阅读"></a>论文阅读</h2><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/103427-972429.png" alt=""></p>
 <!-- hexo-inject:begin --><!-- hexo-inject:end --><p>本文所包含的论文汇总：</p>
 <table>
 <thead>
@@ -99,51 +99,103 @@ $$
 \mathcal{V}_{v}=\left\{v_{u} \mid u \in\left\{u \mid y_{u v}=1\right\} \text { and } y_{u v_{u}}=1\right\}
 $$
 $$
-\mathcal{E}_{v}^{0}=\left\{\mathrm{e} \mid\left(v_{u}, \mathrm{e}\right) \in \mathcal{A} \text { and } v_{u} \in \mathcal{V}_{v}\right\}
-$$
-
-
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>    $$
-    \mathcal{V}_{v}=\left\{v_{u} \mid u \in\left\{u \mid y_{u v}=1\right\} \text { and } y_{u v_{u}}=1\right\}
-    $$
-
-    $$
-    \mathcal{E}_{v}^{0}=\left\{\mathrm{e} \mid\left(v_{u}, \mathrm{e}\right) \in \mathcal{A} \text { and } v_{u} \in \mathcal{V}_{v}\right\}
-    $$
-
--   对于user的neighbor的确定：
+\mathcal{E}_{v}^{0}=\left\{\mathrm{e} \mid\left(v_{u}, \mathrm{e}\right) \in \mathcal{A} \text { and } v_{u} \in \mathcal{V}_{v}\right\}</li>
+<li><p>对于user的neighbor的确定：</p>
+<div>
     $$
     \mathcal{E}_{u}^{0}=\left\{\mathrm{e} \mid(v, \mathrm{e}) \in \mathcal{A} \text { and } v \in\left\{v \mid y_{u v}=1\right\}\right\}
-    $$</code></pre><ul>
-<li><p>Knowledge Graph Propagation</p>
-<p>对于上一阶段得到的seed set，在知识图谱中逐层传播，每一层得到的entity作为一个集合保存<br>$$<br>\mathcal{S}<em>{o}^{l}=\left{(h, r, t) \mid(h, r, t) \in \mathcal{G} \text { and } h \in \mathcal{E}</em>{o}^{l-1}\right}, \quad l=1,2, \ldots, L<br>$$</p>
+    $$
+</div>
 </li>
 </ul>
-<h4 id="Knowledge-aware-Attentive-Embedding-Layer"><a href="#Knowledge-aware-Attentive-Embedding-Layer" class="headerlink" title="Knowledge-aware Attentive Embedding Layer"></a>Knowledge-aware Attentive Embedding Layer</h4><p>对于每一个扩展出来的entity，使用attention进行计算，attention机制使用两层全连接网络实现：<br>$$<br>\begin{aligned}<br>\mathrm{z}<em>{0} &amp;=\operatorname{ReLU}\left(\mathrm{W}</em>{0}\left(\mathrm{e}<em>{i}^{h} | \mathrm{r}</em>{i}\right)+\mathrm{b}<em>{0}\right) \<br>\pi\left(\mathrm{e}</em>{i}^{h}, \mathrm{r}<em>{i}\right) &amp;=\sigma\left(\mathrm{W}</em>{2} \operatorname{ReLU}\left(\mathrm{W}<em>{1} \mathrm{z}</em>{0}+\mathrm{b}<em>{1}\right)+\mathrm{b}</em>{2}\right)<br>\end{aligned}<br>$$<br>最后经过softmax得到如下：<br>$$<br>\pi\left(\mathrm{e}<em>{i}^{h}, \mathrm{r}</em>{i}\right)=\frac{\exp \left(\pi\left(\mathrm{e}<em>{i}^{h}, \mathrm{r}</em>{i}\right)\right)}{\sum_{\left(h^{\prime}, r^{\prime}, t^{\prime}\right) \in \mathcal{S}<em>{o}^{l}} \exp \left(\pi\left(\mathrm{e}</em>{i}^{h^{\prime}}, \mathrm{r}<em>{i}^{\prime}\right)\right)}<br>$$<br>其中第0层的计算略有不同，因为第0层的贡献都很大，因此采用如下的方法：<br>$$<br>\mathrm{e}</em>{o}^{(0)}=\frac{\sum_{\mathrm{e} \in \mathcal{E}<em>{o}^{0}} \mathrm{e}}{\left|\mathcal{E}</em>{o}^{0}\right|}<br>$$</p>
-<ul>
-<li><p>对于item而言：<br>$$<br>\mathrm{e}<em>{v}^{(\text {origin})}=\frac{\sum</em>{\mathrm{e} \in{\mathrm{e} \mid(\mathrm{e}, v) \in \mathcal{A}}} \mathrm{e}}{|{\mathrm{e} \mid(\mathrm{e}, v) \in \mathcal{A}}|}<br>$$</p>
-<p>$$<br>\mathcal{T}<em>{v}=\left{\mathrm{e}</em>{v}^{(\text {origin})}, \mathrm{e}<em>{v}^{(0)}, \mathrm{e}</em>{v}^{(1)}, \ldots, \mathrm{e}_{v}^{(L)}\right}<br>$$</p>
 </li>
-<li><p>对于user而言：<br>$$<br>\mathcal{T}<em>{u}=\left{\mathrm{e}</em>{u}^{(0)}, \mathrm{e}<em>{u}^{(1)}, \ldots, \mathrm{e}</em>{u}^{(L)}\right}<br>$$</p>
+<li><p>Knowledge Graph Propagation</p>
+<p>对于上一阶段得到的seed set，在知识图谱中逐层传播，每一层得到的entity作为一个集合保存</p>
+<div>
+    $$
+    \mathcal{S}_{o}^{l}=\left\{(h, r, t) \mid(h, r, t) \in \mathcal{G} \text { and } h \in \mathcal{E}_{o}^{l-1}\right\}, \quad l=1,2, \ldots, L
+    $$
+</div>
+
+</li>
+</ul>
+<h4 id="Knowledge-aware-Attentive-Embedding-Layer"><a href="#Knowledge-aware-Attentive-Embedding-Layer" class="headerlink" title="Knowledge-aware Attentive Embedding Layer"></a>Knowledge-aware Attentive Embedding Layer</h4><p>对于每一个扩展出来的entity，使用attention进行计算，attention机制使用两层全连接网络实现：</p>
+<div>
+    $$
+    \begin{aligned}
+\mathrm{z}_{0} &=\operatorname{ReLU}\left(\mathrm{W}_{0}\left(\mathrm{e}_{i}^{h} \| \mathrm{r}_{i}\right)+\mathrm{b}_{0}\right) \\
+\pi\left(\mathrm{e}_{i}^{h}, \mathrm{r}_{i}\right) &=\sigma\left(\mathrm{W}_{2} \operatorname{ReLU}\left(\mathrm{W}_{1} \mathrm{z}_{0}+\mathrm{b}_{1}\right)+\mathrm{b}_{2}\right)
+\end{aligned}
+    $$
+</div>
+
+<p>最后经过softmax得到如下：</p>
+<div>
+    $$
+    \pi\left(\mathrm{e}_{i}^{h}, \mathrm{r}_{i}\right)=\frac{\exp \left(\pi\left(\mathrm{e}_{i}^{h}, \mathrm{r}_{i}\right)\right)}{\sum_{\left(h^{\prime}, r^{\prime}, t^{\prime}\right) \in \mathcal{S}_{o}^{l}} \exp \left(\pi\left(\mathrm{e}_{i}^{h^{\prime}}, \mathrm{r}_{i}^{\prime}\right)\right)}
+    $$
+</div>
+
+<p>其中第0层的计算略有不同，因为第0层的贡献都很大，因此采用如下的方法：</p>
+<div>
+    $$
+    \mathrm{e}_{o}^{(0)}=\frac{\sum_{\mathrm{e} \in \mathcal{E}_{o}^{0}} \mathrm{e}}{\left|\mathcal{E}_{o}^{0}\right|}
+    $$
+</div>
+
+<ul>
+<li><p>对于item而言：</p>
+<div>
+    $$
+\mathrm{e}_{v}^{(\text {origin})}=\frac{\sum_{\mathrm{e} \in\{\mathrm{e} \mid(\mathrm{e}, v) \in \mathcal{A}\}} \mathrm{e}}{|\{\mathrm{e} \mid(\mathrm{e}, v) \in \mathcal{A}\}|}
+    $$
+    $$
+    \mathcal{T}_{v}=\left\{\mathrm{e}_{v}^{(\text {origin})}, \mathrm{e}_{v}^{(0)}, \mathrm{e}_{v}^{(1)}, \ldots, \mathrm{e}_{v}^{(L)}\right\}
+$$
+</div>
+</li>
+<li><p>对于user而言：</p>
+<div>
+    $$
+    \mathcal{T}_{u}=\left\{\mathrm{e}_{u}^{(0)}, \mathrm{e}_{u}^{(1)}, \ldots, \mathrm{e}_{u}^{(L)}\right\}
+    $$
+</div>
+
 </li>
 </ul>
 <h4 id="Model-Prediction-Layer"><a href="#Model-Prediction-Layer" class="headerlink" title="Model Prediction Layer"></a>Model Prediction Layer</h4><ul>
-<li><p>Sum aggregator：将上一个模块的每一层向量直接相加<br>$$<br>\operatorname{agg}<em>{s u m}^{(o)}=\sigma\left(\mathrm{W}</em>{a} \cdot \sum_{e_{o} \in \mathcal{T}<em>{o}} \mathrm{e}</em>{o}+\mathrm{b}_{a}\right)<br>$$</p>
+<li><p>Sum aggregator：将上一个模块的每一层向量直接相加</p>
+<div>
+    $$
+\operatorname{agg}_{s u m}^{(o)}=\sigma\left(\mathrm{W}_{a} \cdot \sum_{e_{o} \in \mathcal{T}_{o}} \mathrm{e}_{o}+\mathrm{b}_{a}\right)
+    $$
+</div>
 </li>
-<li><p>Pooling aggregator：去上一模块中所有层的向量中每一维度选取最大的<br>$$<br>a g g_{\text {pool}}^{(o)}=\sigma\left(\mathrm{W}<em>{a} \cdot \text {pool}</em>{\max }\left(\mathcal{T}<em>{o}\right)+\mathrm{b}</em>{a}\right)<br>$$</p>
+<li><p>Pooling aggregator：去上一模块中所有层的向量中每一维度选取最大的</p>
+<div>
+    $$
+a g g_{\text {pool}}^{(o)}=\sigma\left(\mathrm{W}_{a} \cdot \text {pool}_{\max }\left(\mathcal{T}_{o}\right)+\mathrm{b}_{a}\right)
+    $$
+</div>
 </li>
 <li><p>Concat aggregator：将每一层向量进行拼接</p>
-<div></div>
+<div>
+    $$
+    a g g_{\text {concat}}^{(o)}=\sigma\left(\mathrm{W}_{a} \cdot\left(\mathrm{e}_{o}^{\left(i_{1}\right)}\left\|\mathrm{e}_{o}^{\left(i_{2}\right)}\right\| \ldots \| \mathrm{e}_{o}^{\left(i_{n}\right)}\right)+\mathrm{b}_{a}\right)
+    $$
+</div>
 
-<p>$$<br>a g g_{\text {concat}}^{(o)}=\sigma\left(\mathrm{W}<em>{a} \cdot\left(\mathrm{e}</em>{o}^{\left(i_{1}\right)}\left|\mathrm{e}<em>{o}^{\left(i</em>{2}\right)}\right| \ldots | \mathrm{e}<em>{o}^{\left(i</em>{n}\right)}\right)+\mathrm{b}_{a}\right)<br>$$</p>
 </li>
 </ul>
-<p>点击率的预测函数：<br>$$<br>\hat{y}<em>{u v}=\mathrm{e}</em>{u}^{\top} \mathrm{e}_{v}<br>$$</p>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="C:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201207201827038.png" alt="image-20201207201827038"></p>
+<p>点击率的预测函数：</p>
+<div>
+    $$
+    \hat{y}_{u v}=\mathrm{e}_{u}^{\top} \mathrm{e}_{v}
+    $$
+</div>
+
+
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/08/101653-986811.png" alt=""></p>
 <h2 id="KARN-A-Knowledge-Aware-Attentional-Reasoning-Network-for-Recommendation"><a href="#KARN-A-Knowledge-Aware-Attentional-Reasoning-Network-for-Recommendation" class="headerlink" title="KARN: A Knowledge-Aware Attentional Reasoning Network for Recommendation"></a>KARN: A Knowledge-Aware Attentional Reasoning Network for Recommendation</h2><h3 id="Intro-1"><a href="#Intro-1" class="headerlink" title="Intro"></a>Intro</h3><p>之前的工作要么只考虑使用知识图谱来解释user与item在知识图谱中之间path的合理性，要么只考虑通过用户的历史点击序列来预测用户的兴趣。本文将结合两者进行预测，这种预测方式将提高预测的准确率，具体如下：</p>
 <p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/07/094120-752547.png" alt=""></p>
 <p>用户Jark的历史记录为3-&gt;2-&gt;1，如果不考虑历史记录，只根据<strong>1和知识图谱</strong>进行推荐，则由于Titantic的导演是James Cameron，因此可能推荐他执导的另外两部电影Piranha2和Aliens，但是通过<strong>历史记录</strong>可以得到Jark喜欢的电影类型更偏向于Adventure类型的电影，因此更有可能推荐Aliens而不是Piranha2</p>
