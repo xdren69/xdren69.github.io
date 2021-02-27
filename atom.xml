@@ -251,9 +251,9 @@
     <link href="https://xdren69.github.io/2020/10/03/cuda-ubuntu-install/"/>
     <id>https://xdren69.github.io/2020/10/03/cuda-ubuntu-install/</id>
     <published>2020-10-03T02:21:50.000Z</published>
-    <updated>2020-12-08T02:02:48.228Z</updated>
+    <updated>2020-12-21T07:11:04.312Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="cuda，cudnn之间的关系"><a href="#cuda，cudnn之间的关系" class="headerlink" title="cuda，cudnn之间的关系"></a>cuda，cudnn之间的关系</h2><h2 id="cuda安装"><a href="#cuda安装" class="headerlink" title="cuda安装"></a>cuda安装</h2><h3 id="安装之前的准备"><a href="#安装之前的准备" class="headerlink" title="安装之前的准备"></a>安装之前的准备</h3><h3 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h3><p>一般安装分为装驱动和装cuda两个部分，但是现在在安装cuda的时候会可以由我们选择为我们安装适配的驱动，所以这里选择在安装cuda时安装驱动，那么先去<a href="https://developer.nvidia.com/cuda-10.1-download-archive-base">官网</a>下载合适版本的cuda，这里我们安装cuda10.1，根据系统选择如下：</p><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202010/03/103126-291106.png" alt=""></p><blockquote><p>  注意：安装前要看清自己的ubuntu版本号</p></blockquote><h3 id="卸载安装"><a href="#卸载安装" class="headerlink" title="卸载安装"></a>卸载安装</h3>]]></content>
+    <content type="html"><![CDATA[<h2 id="cuda，cudnn之间的关系"><a href="#cuda，cudnn之间的关系" class="headerlink" title="cuda，cudnn之间的关系"></a>cuda，cudnn之间的关系</h2><h2 id="cuda安装"><a href="#cuda安装" class="headerlink" title="cuda安装"></a>cuda安装</h2><h3 id="安装之前的准备"><a href="#安装之前的准备" class="headerlink" title="安装之前的准备"></a>安装之前的准备</h3><h3 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h3><p>一般安装分为装驱动和装cuda两个部分，但是现在在安装cuda的时候会可以由我们选择为我们安装适配的驱动，所以这里选择在安装cuda时安装驱动，那么先去<a href="https://developer.nvidia.com/cuda-10.1-download-archive-base">官网</a>下载合适版本的cuda，这里我们安装cuda10.1，根据系统选择如下：</p><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202010/03/103126-291106.png" alt=""></p><blockquote><p>  注意：安装前要看清自己的ubuntu版本号</p></blockquote><p><a href="https://blog.csdn.net/QLULIBIN/article/details/78714596">安装教程</a></p><h3 id="卸载安装"><a href="#卸载安装" class="headerlink" title="卸载安装"></a>卸载安装</h3>]]></content>
     
     <summary type="html">
     
