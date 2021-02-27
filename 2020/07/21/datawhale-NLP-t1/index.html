@@ -10,67 +10,64 @@
         gtag('js', new Date());
     
         gtag('config', 'UA-170595403-1');</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><link rel="alternate" href="/atom.xml" title="Xdren's blog" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/images/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-07-21T15:20:01.000Z" title="2020-07-21T15:20:01.000Z">2020-07-21</time><span class="level-item"><a class="link-muted" href="/categories/Datawhale%E5%AD%A6%E4%B9%A0%E6%89%8B%E8%AE%B0/">Datawhale学习手记</a></span><span class="level-item">8 分钟 读完 (大约 1148 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><i class="far fa-eye"></i>&nbsp;&nbsp;<span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">datawhale-零基础入门NLP-Task1</h1><div class="content"><h3 id="题目理解"><a href="#题目理解" class="headerlink" title="题目理解"></a>题目理解</h3><p>目标是用多种思路完成天池的NLP新手级题目<a href="https://tianchi.aliyun.com/competition/entrance/531810/introduction">零基础入门NLP - 新闻文本分类</a>，题目的大意是训练一个模型，对不同的文本段进行分类，分成财经、彩票、房产、股票、家居、教育、科技、社会、时尚、时政、体育、星座、游戏、娱乐这十四个类（记作0-13），其中会对输入的文本段做匿名化处理，如下所示：</p>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202007/22/001259-778391.jpeg" alt="匿名化处理后的文本和标签"></p>
-<h3 id="流程划分"><a href="#流程划分" class="headerlink" title="流程划分"></a>流程划分</h3><p>由于题目给出的训练用的文本段是匿名化的，无法进行分词操作，将整个比赛流程划分成<strong>特征提取</strong>和<strong>分类模型</strong>两个方面，因此在后续任务中会通过四种思路来完成这一题目，分别是：</p>
-<ol>
+</head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/images/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-07-21T15:20:01.000Z" title="2020-07-21T15:20:01.000Z">2020-07-21</time><span class="level-item"><a class="link-muted" href="/categories/Datawhale%E5%AD%A6%E4%B9%A0%E6%89%8B%E8%AE%B0/">Datawhale学习手记</a></span><span class="level-item">8 分钟 读完 (大约 1148 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><i class="far fa-eye"></i>&nbsp;&nbsp;<span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">datawhale-零基础入门NLP-Task1</h1><div class="content"><h3 id="题目理解">题目理解</h3>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>目标是用多种思路完成天池的NLP新手级题目<a href="https://tianchi.aliyun.com/competition/entrance/531810/introduction">零基础入门NLP - 新闻文本分类</a>，题目的大意是训练一个模型，对不同的文本段进行分类，分成财经、彩票、房产、股票、家居、教育、科技、社会、时尚、时政、体育、星座、游戏、娱乐这十四个类（记作0-13），其中会对输入的文本段做匿名化处理，如下所示：</p>
+<figure>
+<img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202007/22/001259-778391.jpeg" alt="匿名化处理后的文本和标签" /><figcaption aria-hidden="true">匿名化处理后的文本和标签</figcaption>
+</figure>
+<h3 id="流程划分">流程划分</h3>
+<p>由于题目给出的训练用的文本段是匿名化的，无法进行分词操作，将整个比赛流程划分成<strong>特征提取</strong>和<strong>分类模型</strong>两个方面，因此在后续任务中会通过四种思路来完成这一题目，分别是：</p>
+<ol type="1">
 <li><p>TF-IDF + 机器学习分类器</p>
-<p>TF-IDF用于对文本提取特征</p>
-</li>
+<p>TF-IDF用于对文本提取特征</p></li>
 <li><p>FastText</p>
-<p>FastText是入门款的词向量，由facebook提供</p>
-</li>
+<p>FastText是入门款的词向量，由facebook提供</p></li>
 <li><p>WordVec + 深度学习分类器</p>
-<p>WordVec是进阶款的词向量</p>
-</li>
+<p>WordVec是进阶款的词向量</p></li>
 <li><p>Bert词向量</p>
-<p>Bert是高配款的词向量</p>
-</li>
+<p>Bert是高配款的词向量</p></li>
 </ol>
-<h3 id="测评指标"><a href="#测评指标" class="headerlink" title="测评指标"></a>测评指标</h3><p>评价标准为类别<strong>f1_score</strong>的均值，结果越大越好。</p>
-<h4 id="对于评测标准的理解"><a href="#对于评测标准的理解" class="headerlink" title="对于评测标准的理解"></a>对于评测标准的理解</h4><p>评测标准的本质是用来筛选模型的好坏的，而模型的好坏在不同的条件下有不同的标准，因此评测标准也应该是多样的。</p>
+<h3 id="测评指标">测评指标</h3>
+<p>评价标准为类别<strong>f1_score</strong>的均值，结果越大越好。</p>
+<h4 id="对于评测标准的理解">对于评测标准的理解</h4>
+<p>评测标准的本质是用来筛选模型的好坏的，而模型的好坏在不同的条件下有不同的标准，因此评测标准也应该是多样的。</p>
 <p>在本题中模型的作用是预测一段文本的类别，细化而言，即对于一段文本，判断其是否属于14类中的某一类（例如第3类），如果是模型预测是第3类就是positive，模型预测不是第3类就是negative，再结合实际情况，一共得到四类结果，如下图所示：</p>
-<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202007/22/011111-513787.jpeg" alt=""></p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202007/22/011111-513787.jpeg" /></p>
 <p>在实际中有很多种计算方式：</p>
-<ol>
+<ol type="1">
 <li><strong>Precision</strong>：</li>
 </ol>
 <ul>
-<li><p>公式：$$Precision =\frac{ True Positive }{ True Positive + False Positive }$$</p>
-</li>
+<li><p>公式：<span class="math display">\[Precision =\frac{ True Positive }{ True Positive + False Positive }\]</span></p></li>
 <li><p>理解：这一标准关注的是对于某一类，在所有预测为positive的文本中，在实际中也是positive（即属于true positive）的概率</p>
 <ul>
 <li>用途：Precision is a good measure to determine, when the costs of False Positive is high.（当分类器将一个实际negative的样本识别为positive会产生巨大损失时，即<strong>对false positive敏感</strong>，例如非垃圾邮件被识别成垃圾邮件）</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<ol start="2">
+<ol start="2" type="1">
 <li><strong>Recall</strong>：</li>
 </ol>
 <ul>
-<li><p>公式：$$ Recall =\frac{True Positive}{True Positive+False Negative}$$</p>
-</li>
-<li><p>理解：这一标准关注的是对于某一类，在所有实际中为positive的文本中，在预测时也是positive（即属于true positive）的概率，也可以理解成<strong>模型对正样例的捕获能力</strong></p>
-</li>
-<li><p>用途：Recall shall be the model metric we use to select our best model when there is a high cost associated with False Negative.（用于当一个正样例被分类错误会带来巨大损失的模型，即<strong>对false negative敏感</strong>，例如对强传染疾病的分类，将患病病人识别成不患病的）</p>
-</li>
+<li><p>公式：<span class="math display">\[ Recall =\frac{True Positive}{True Positive+False Negative}\]</span></p></li>
+<li><p>理解：这一标准关注的是对于某一类，在所有实际中为positive的文本中，在预测时也是positive（即属于true positive）的概率，也可以理解成<strong>模型对正样例的捕获能力</strong></p></li>
+<li><p>用途：Recall shall be the model metric we use to select our best model when there is a high cost associated with False Negative.（用于当一个正样例被分类错误会带来巨大损失的模型，即<strong>对false negative敏感</strong>，例如对强传染疾病的分类，将患病病人识别成不患病的）</p></li>
 </ul>
-<ol start="3">
+<ol start="3" type="1">
 <li><strong>Accuracy</strong>：</li>
 </ol>
 <ul>
-<li>公式：$$\mathrm{Accuracy}=\frac{\text { True Positive }+\text { True Negative }}{ \text { (True Positive }+\text { False Positive }+\text { True Negative }+\text { False Negative })}$$<ul>
+<li>公式：<span class="math display">\[\mathrm{Accuracy}=\frac{\text { True Positive }+\text { True Negative }}{ \text { (True Positive }+\text { False Positive }+\text { True Negative }+\text { False Negative })}\]</span>
+<ul>
 <li>理解：计算的是所有样本中分类正确（不论正样例还是负样例）占算有样本的比例</li>
 <li>用途：It is most used when all the classes are equally important.（用于所有分类结果都一样重要时）</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<ol start="4">
-<li><strong>F1_score</strong>：<ul>
-<li>公式：$$\mathrm{F} 1=\left(\frac{\text { Recall }^{-1}+\text {Precision }^{-1}}{2}\right)^{-1} =2 \times \frac{ Precision*Recall} {Precision+Recall}$$</li>
+<ol start="4" type="1">
+<li><strong>F1_score</strong>：
+<ul>
+<li>公式：<span class="math display">\[\mathrm{F} 1=\left(\frac{\text { Recall }^{-1}+\text {Precision }^{-1}}{2}\right)^{-1} =2 \times \frac{ Precision*Recall} {Precision+Recall}\]</span></li>
 <li>理解：This is the harmonic mean of Precision and Recall and gives a better measure of the incorrectly classified cases than the Accuracy Metric（属于Precision和Recall的平衡点，即对Precision和Recall计算调和平均数）</li>
-</ul>
-</li>
+</ul></li>
 </ol>
 <blockquote><p>对于<strong>F1_score</strong>和<strong>Accuracy</strong>的比较：</p>
 <ul>
@@ -79,8 +76,8 @@
 <li>In most real-life classification problems, imbalanced class distribution exists and thus F1-score is a better metric to evaluate our model on.</li>
 </ul>
 <footer><strong>Purva Huilgol</strong><cite><a href="https://medium.com/analytics-vidhya/accuracy-vs-f1-score-6258237beca2">Accuracy vs. F1-Score</a></cite></footer></blockquote>
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>[1] <a href="https://tianchi.aliyun.com/notebook-ai/detail?postId=118252">Datawhale零基础入门NLP赛事 - Task1官方文档</a></p>
+<h3 id="参考">参考</h3>
+<p>[1] <a href="https://tianchi.aliyun.com/notebook-ai/detail?postId=118252">Datawhale零基础入门NLP赛事 - Task1官方文档</a></p>
 <p>[2] <a href="https://towardsdatascience.com/accuracy-precision-recall-or-f1-331fb37c5cb9">Accuracy, Precision, Recall or F1?</a></p>
 <p>[3] <a href="https://medium.com/analytics-vidhya/accuracy-vs-f1-score-6258237beca2">Accuracy vs. F1-Score</a></p>
 <p>[3] 图片引用自<a href="http://www.jeepxie.net/article/369869.html">这里</a></p>

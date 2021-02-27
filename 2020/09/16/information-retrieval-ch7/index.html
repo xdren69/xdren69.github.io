@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>chap 7-Computing scores in a complete search system - Xdren&#039;s blog</title><meta description="这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"><meta property="og:type" content="blog"><meta property="og:title" content="chap 7-Computing scores in a complete search system"><meta property="og:url" content="https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png"><meta property="og:image" content="c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916193043677.png"><meta property="og:image" content="c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916212242442.png"><meta property="article:published_time" content="2020-09-15T16:04:26.000Z"><meta property="article:modified_time" content="2020-10-18T03:04:09.464Z"><meta property="article:author" content="Xdren"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"},"headline":"Xdren's blog","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png","c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916193043677.png","c:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916212242442.png"],"datePublished":"2020-09-15T16:04:26.000Z","dateModified":"2020-10-18T03:04:09.464Z","author":{"@type":"Person","name":"Xdren"},"description":"这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"}</script><link rel="canonical" href="https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"><link rel="icon" href="/images/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var _hmt = _hmt || [];
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>chap 7-Computing scores in a complete search system - Xdren&#039;s blog</title><meta description="这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"><meta property="og:type" content="blog"><meta property="og:title" content="chap 7-Computing scores in a complete search system"><meta property="og:url" content="https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png"><meta property="og:image" content="c:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20200916193043677.png"><meta property="og:image" content="c:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20200916212242442.png"><meta property="article:published_time" content="2020-09-15T16:04:26.000Z"><meta property="article:modified_time" content="2020-10-18T03:04:09.464Z"><meta property="article:author" content="Xdren"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"},"headline":"Xdren's blog","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png","c:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20200916193043677.png","c:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20200916212242442.png"],"datePublished":"2020-09-15T16:04:26.000Z","dateModified":"2020-10-18T03:04:09.464Z","author":{"@type":"Person","name":"Xdren"},"description":"这是一篇关于《信息检索导论》第七章的读书笔记，对于第六章中学习的文档评分方法进行了扩展"}</script><link rel="canonical" href="https://xdren69.github.io/2020/09/16/information-retrieval-ch7/"><link rel="icon" href="/images/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var _hmt = _hmt || [];
         (function() {
             var hm = document.createElement("script");
             hm.src = "//hm.baidu.com/hm.js?14e57ad6d6de6c90603b6bea2182917a";
@@ -14,50 +14,60 @@
 <!-- hexo-inject:begin --><!-- hexo-inject:end --><li>以文档为单位的评分方法：每次计算一篇文档的得分</li>
 <li>以词项为单位的评分方法：遇到每个词项时，得分能够逐渐累加</li>
 </ul>
-<h2 id="快速评分及排序"><a href="#快速评分及排序" class="headerlink" title="快速评分及排序"></a>快速评分及排序</h2><blockquote>
-<p>  第六章介绍的是精确返回前K篇得分最高的文档的办法；此处我们开始关注非精确返回前K篇文档的方法，即前K篇返回的文档与最相关的K篇近似，但又不完全相同。同时用户感受不到返回的前K篇文档间的相关度有所降低，这样做的好处是可以降低运算的复杂度</p>
+<h2 id="快速评分及排序">快速评分及排序</h2>
+<blockquote>
+<p>第六章介绍的是精确返回前K篇得分最高的文档的办法；此处我们开始关注非精确返回前K篇文档的方法，即前K篇返回的文档与最相关的K篇近似，但又不完全相同。同时用户感受不到返回的前K篇文档间的相关度有所降低，这样做的好处是可以降低运算的复杂度</p>
 </blockquote>
 <p>此处介绍的算法主要包含如下的两个步骤：</p>
-<ol>
-<li>找到一个文档集合 A，它包含了参与最后竞争的候选文档，其中$$K&lt;|A|&lt;&lt;N$$。A 不必包 含前 K 篇得分最高的文档，但是它应该包含很多和前 K 篇文档得分相近的文档</li>
+<ol type="1">
+<li>找到一个文档集合 A，它包含了参与最后竞争的候选文档，其中<span class="math display">\[K&lt;|A|&lt;&lt;N\]</span>。A 不必包 含前 K 篇得分最高的文档，但是它应该包含很多和前 K 篇文档得分相近的文档</li>
 <li>返回 A 中得分最高的 K 篇文档</li>
 </ol>
-<h3 id="索引去除技术"><a href="#索引去除技术" class="headerlink" title="索引去除技术"></a>索引去除技术</h3><ol>
+<h3 id="索引去除技术">索引去除技术</h3>
+<ol type="1">
 <li>仅考虑查询中词项idf值超过一定阈值的单词所对应的倒排记录表</li>
 <li>仅考虑包含多个（K个）查询词项的文档</li>
 </ol>
-<h3 id="胜者表"><a href="#胜者表" class="headerlink" title="胜者表"></a>胜者表</h3><p>胜者表（champion list），有时也称为优胜表（fancy list）或高分文档（top doc），它的基本 思路是，对于词典中的每个词项 t，预先计算出 r 个最高权重的文档，其中 r 的值需要事先给定。 对于 tf-idf 权重计算机制而言，词项 t 所对应的 tf 值最高的 r 篇文档构成 t 的胜者表</p>
-<h3 id="静态得分和排序"><a href="#静态得分和排序" class="headerlink" title="静态得分和排序"></a>静态得分和排序</h3><p>很多搜索引擎中，每篇文档 d 往往都有 一个与查询无关的静态得分 g（d）。该得分函数的取值往往在 0 到 1 之间。比如，对于 Web 上 的新闻报道，g（d）可以基于用户的正面评价次数来定义。</p>
+<h3 id="胜者表">胜者表</h3>
+<p>胜者表（champion list），有时也称为优胜表（fancy list）或高分文档（top doc），它的基本 思路是，对于词典中的每个词项 t，预先计算出 r 个最高权重的文档，其中 r 的值需要事先给定。 对于 tf-idf 权重计算机制而言，词项 t 所对应的 tf 值最高的 r 篇文档构成 t 的胜者表</p>
+<h3 id="静态得分和排序">静态得分和排序</h3>
+<p>很多搜索引擎中，每篇文档 d 往往都有 一个与查询无关的静态得分 g（d）。该得分函数的取值往往在 0 到 1 之间。比如，对于 Web 上 的新闻报道，g（d）可以基于用户的正面评价次数来定义。</p>
 <p>可将静态得分和相似度组合得出每个文档的得分，即：</p>
-<p>$$\text { net-score }(q, d)=g(d)+\frac{\vec{V}(q) \cdot \vec{V}(d)}{|\vec{V}(q) | \vec{V}(d)|}$$</p>
-<h3 id="簇剪枝方法"><a href="#簇剪枝方法" class="headerlink" title="簇剪枝方法"></a>簇剪枝方法</h3><p>主要原理是对所有的文本使用聚类操作，聚类操作如下：</p>
-<ol>
-<li>从 N 篇文档组成的文档集中随机选出$$\sqrt{N}$$篇文档，它们称为先导者（leader）集合</li>
-<li>对于剩余的$$N - \sqrt{N}$$篇（称为追随者，follower）每篇不属于先导者集合的文档，计算离之最近的先导者</li>
+<p><span class="math display">\[\text { net-score }(q, d)=g(d)+\frac{\vec{V}(q) \cdot \vec{V}(d)}{|\vec{V}(q) \| \vec{V}(d)|}\]</span></p>
+<h3 id="簇剪枝方法">簇剪枝方法</h3>
+<p>主要原理是对所有的文本使用聚类操作，聚类操作如下：</p>
+<ol type="1">
+<li>从 N 篇文档组成的文档集中随机选出<span class="math display">\[\sqrt{N}\]</span>篇文档，它们称为先导者（leader）集合</li>
+<li>对于剩余的<span class="math display">\[N - \sqrt{N}\]</span>篇（称为追随者，follower）每篇不属于先导者集合的文档，计算离之最近的先导者</li>
 </ol>
 <p>查询操作如下：</p>
-<ol>
-<li>给定查询 q，通过与$$\sqrt{N}$$个先导者计算余弦相似度，找出和它最近的先导者 L</li>
+<ol type="1">
+<li>给定查询 q，通过与<span class="math display">\[\sqrt{N}\]</span>个先导者计算余弦相似度，找出和它最近的先导者 L</li>
 <li>候选集合 A 包括 L 及其追随者，然后对 A 中的所有的文档计算余弦相似度</li>
 </ol>
-<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png" alt=""></p>
-<h2 id="信息检索系统的组成"><a href="#信息检索系统的组成" class="headerlink" title="信息检索系统的组成"></a>信息检索系统的组成</h2><p>此处介绍信息检索系统中常用的一些概念，即：</p>
-<h3 id="层次型索引"><a href="#层次型索引" class="headerlink" title="层次型索引"></a>层次型索引</h3><p>是对索引去除方法的一般化技术：例如，第 1 层索引中的 tf 阈值是 20， 第 2 层阈值是 10。这意味着第 1 层索引只保留 tf 值超过 20 的倒排记录，而第 2 层的记录只保 留 tf 值超过10的倒排记录。</p>
-<p><img src="C:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916193043677.png" alt=""></p>
-<h3 id="查询词项的邻近性"><a href="#查询词项的邻近性" class="headerlink" title="查询词项的邻近性"></a>查询词项的邻近性</h3><blockquote>
-<p>  对于检索中的查询，特别是Web上的自由文本查询来说，用户往往希望返回的文档中大部分或者全部查询词项之间的距离比较近，因为这表明返回文档中具有聚焦用户 查询意图的文本</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202009/16/143035-709171.png" /></p>
+<h2 id="信息检索系统的组成">信息检索系统的组成</h2>
+<p>此处介绍信息检索系统中常用的一些概念，即：</p>
+<h3 id="层次型索引">层次型索引</h3>
+<p>是对索引去除方法的一般化技术：例如，第 1 层索引中的 tf 阈值是 20， 第 2 层阈值是 10。这意味着第 1 层索引只保留 tf 值超过 20 的倒排记录，而第 2 层的记录只保 留 tf 值超过10的倒排记录。</p>
+<p><img src="C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20200916193043677.png" /></p>
+<h3 id="查询词项的邻近性">查询词项的邻近性</h3>
+<blockquote>
+<p>对于检索中的查询，特别是Web上的自由文本查询来说，用户往往希望返回的文档中大部分或者全部查询词项之间的距离比较近，因为这表明返回文档中具有聚焦用户 查询意图的文本</p>
 </blockquote>
-<p>考虑一个由两个或者多个查询词项构成的查询$$t_{1}, t_{2}, \ldots, t_{k}$$，令文档中包含所有查询词项得最小窗口大小为$$\omega$$，其取值为窗口内词的个数。如果文档中不包含所有的查询词项， 那么此时可以将ω设成一个非常大的数字。<strong><em>直观上讲，ω的值越小，文档d和查询匹配程度更高</em></strong>，即可以根据ω的大小来设计权重</p>
-<h3 id="查询分析及文档评分函数的设计"><a href="#查询分析及文档评分函数的设计" class="headerlink" title="查询分析及文档评分函数的设计"></a>查询分析及文档评分函数的设计</h3><ol>
-<li>查询分析：将自由文本查询通过查询分析器，转化成带操作符的查询，比如对于rising  interest rates的查询的分析如下：<ol>
-<li>查询rising  interest rates这一短语</li>
+<p>考虑一个由两个或者多个查询词项构成的查询<span class="math display">\[t_{1}, t_{2}, \ldots, t_{k}\]</span>，令文档中包含所有查询词项得最小窗口大小为<span class="math display">\[\omega\]</span>，其取值为窗口内词的个数。如果文档中不包含所有的查询词项， 那么此时可以将ω设成一个非常大的数字。<strong><em>直观上讲，ω的值越小，文档d和查询匹配程度更高</em></strong>，即可以根据ω的大小来设计权重</p>
+<h3 id="查询分析及文档评分函数的设计">查询分析及文档评分函数的设计</h3>
+<ol type="1">
+<li>查询分析：将自由文本查询通过查询分析器，转化成带操作符的查询，比如对于rising interest rates的查询的分析如下：
+<ol type="1">
+<li>查询rising interest rates这一短语</li>
 <li>如果太少，转而分别查询 rising interest 和 interest rates 两个查询短语</li>
 <li>如果太少，转而分别查询 rising ，interest 和 rates 这三个查询短语</li>
-</ol>
-</li>
+</ol></li>
 <li>评分函数的设计：必须融入向量空间计算、静态得分、邻近度加权或其他因素</li>
 </ol>
-<h2 id="搜索系统的组成"><a href="#搜索系统的组成" class="headerlink" title="搜索系统的组成"></a>搜索系统的组成</h2><p><img src="C:%5CUsers%5Clenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200916212242442.png" alt=""></p>
+<h2 id="搜索系统的组成">搜索系统的组成</h2>
+<p><img src="C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20200916212242442.png" /></p>
 </div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=5ef30ed0b71a170012eece9c&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/09/16/information-retrieval-ch8/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">chap 8-Evaluation in information retrieval</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/09/16/information-retrieval-ch6/"><span class="level-item">chap 6-Scoring, term weighting, and the vector space model</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
             this.page.url = 'https://xdren69.github.io/2020/09/16/information-retrieval-ch7/';
             this.page.identifier = '2020/09/16/information-retrieval-ch7/';
