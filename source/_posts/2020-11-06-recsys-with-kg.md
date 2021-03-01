@@ -5,7 +5,7 @@ toc: true
 tags:
   - item recommendation
 categories:
-  - recsys
+  - paper reading
 excerpt: 这是一篇对于推荐系统领域与知识图谱相结合的工作的调研
 ---
 

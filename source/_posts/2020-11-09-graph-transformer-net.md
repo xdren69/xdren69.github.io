@@ -1,12 +1,12 @@
 ---
-title: Graph Transformer Networks论文阅读
+title: Graph Transformer Networks 论文阅读
 date: 2020-11-09 17:04:13
 toc: true
 tags:
   - GNN
   - deep learning
 categories:
-  - 论文阅读
+  - paper reading
 excerpt: 这是一篇关于图自动剪裁的论文，通过soft selection剪裁节点间无用的联系，新增有用的联系
 ---
 

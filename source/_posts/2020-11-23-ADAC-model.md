@@ -1,12 +1,12 @@
 ---
-title: Leveraging Demonstrations for Reinforcement Recommendation Reasoning over Knowledge Graphs论文阅读
+title: Leveraging Demonstrations for Reinforcement Recommendation Reasoning over Knowledge Graphs 论文阅读
 date: 2020-11-23 18:53:36
 toc: true
 tags:
   - knowledge graph
   - RL
 categories:
-  - 论文阅读
+  - paper reading
 excerpt: 这是一篇对于推荐系统领域与知识图谱相结合的工作的调研
 ---
 

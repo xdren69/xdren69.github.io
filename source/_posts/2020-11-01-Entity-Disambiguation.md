@@ -3,9 +3,10 @@ title: 实体消歧(Entity Disambiguation)
 date: 2020-11-01 21:21:25
 toc: true
 tags:
+  - NLP
   - entity disambiguation
 categories:
-  - NLP
+  - topic research
 excerpt: 这是一篇对于实体消歧现有工作的调研
 ---
 
