@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读 - Xdren&#039;s blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Xdren&#039;s blog"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Xdren&#039;s blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="发表于WSDM 2017的一篇经典的基于评论进行用户推荐的文章"><meta property="og:type" content="blog"><meta property="og:title" content="(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读"><meta property="og:url" content="https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="发表于WSDM 2017的一篇经典的基于评论进行用户推荐的文章"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205442-237787.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/153132-977348.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/204721-638354.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205315-901372.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205336-557190.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205006-514082.png"><meta property="article:published_time" content="2021-03-05T07:30:13.000Z"><meta property="article:modified_time" content="2021-03-05T13:53:11.271Z"><meta property="article:author" content="Xdren"><meta property="article:tag" content="review-based recommendation"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205442-237787.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/"},"headline":"(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205442-237787.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/153132-977348.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/204721-638354.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205315-901372.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205336-557190.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205006-514082.png"],"datePublished":"2021-03-05T07:30:13.000Z","dateModified":"2021-03-05T13:53:11.271Z","author":{"@type":"Person","name":"Xdren"},"description":"发表于WSDM 2017的一篇经典的基于评论进行用户推荐的文章"}</script><link rel="canonical" href="https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?14e57ad6d6de6c90603b6bea2182917a";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-170595403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-170595403-1');</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-03-05T07:30:13.000Z" title="2021/3/5 下午3:30:13">2021-03-05</time>发表</span><span class="level-item"><time dateTime="2021-03-05T13:53:11.271Z" title="2021/3/5 下午9:53:11">2021-03-05</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/paper-reading/">paper reading</a></span><span class="level-item">13 分钟读完 (大约1994个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读</h1><div class="content"><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205442-237787.png" /></p>
+<h2 id="摘要">摘要</h2>
+<p>⽤户所写的评论中存在很多可以发掘的有⽤的信息，这些信息可以⽤来减轻数据的稀疏性问题并且提升 推荐系统的质量，然⽽⽬前很多推荐系统都忽略了这个评论中的信息。因此我们提出了DeepCoNN模 型，包含两个平⾏的神经⽹络，这两个⽹络在最后⼀层产⽣交互。其中⼀个⽹络通过⽤户写过的所有评 论来学习⽤户的向量表示；另⼀个⽹络通过学习所有针对同⼀商品的评论来学习商品的向量表示。最后 的共享层⽤来学习商品向量和⽤户向量的交互，其交互⽅式采⽤的分解机技术。实验结果证明 DeepCoNN在过个baseline中都表现的很好。</p>
+<h2 id="创新">创新</h2>
+<ol type="1">
+<li>我们提出的DeepCoNN模型是第⼀个通过评论信息来共同建模⽤户⾏为和商品属性，额外的位于两 个神经⽹络之上的共享层链接了两个神经⽹络，通过结合两个平⾏神经⽹络的预测结果来预测⽤户 的评分。</li>
+<li>此篇⽂章的模型使⽤预训练的word embedding来表示⽤户的评论。实验证明这种表示⽅式下的语 义信息和情感态度相⽐于传统的bag-of-word模型更能提升预测准确性。</li>
+<li>利⽤评论不仅可以减轻稀疏性问题，还能显著提⾼系统的整体表现。</li>
+</ol>
+<h2 id="模型">模型</h2>
+<p>整体的模型结果如下图所示：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/153132-977348.png" /></p>
+<p>其中左侧为⽤于学习⽤户向量表示的神经⽹络；右侧为⽤于学习item向量表示的神经⽹络。左右侧的模 型结构完全⼀样，只是输⼊的数据不⼀样，因此此处着重讲解左侧的模型。左侧模型⼀共由四个layer组 成，即：Look-up layer，Convolution layer，Max-pooling layer，Fully-connected layer。接下来将 分别介绍这⼏个layer的作⽤：</p>
+<ul>
+<li><p>Look-up layer：⽤于将每个⽂字转化为对应的word embedding，进⽽将⼀段⽂本转化为⼀个矩 阵。此处不同于之前的bag-of-word，转化为向量矩阵之后依旧保持着原先word之间的顺序。即⾸ 先将⼀个⽤户过往的所有评论组成⼀个document，<span class="math inline">\(d_{1: n}^{u}\)</span>，然后将⽂档转化为矩阵： <span class="math display">\[
+V_{1: n}^{u}=\phi\left(d_{1}^{u}\right) \oplus \phi\left(d_{2}^{u}\right) \oplus \phi\left(d_{3}^{u}\right) \oplus \ldots \oplus \phi\left(d_{n}^{u}\right)
+\]</span> 其中<span class="math inline">\(\phi\left(d_{k}^{u}\right)\)</span>为look-up函数</p></li>
+<li><p>Convolution layer：通过多个卷积核来提取不同的局部语义信息，即 <span class="math display">\[
+z_{j}=f\left(V_{1: n}^{u} * K_{j}+b_{j}\right)
+\]</span> 其中<span class="math inline">\(K_{j} \in \Re^{c \times t}\)</span>为卷积核，*为卷积操作， 为激活函数Rectified Linear Units (ReLUs)，即： <span class="math display">\[
+f(x)=\max \{0, x\}
+\]</span> 每个卷积核会依序遍历⼀遍整个document，得到卷积结果： <span class="math display">\[
+z_{1}, z_{2}, \ldots, z_{(n-t+1)}
+\]</span></p></li>
+<li><p>Max-pooling layer：对于每⼀个卷积核的卷积结果，选择⼀个最⼤的作为当前卷积核在当前 document下的特征。因此pooling函数的表达式如下： <span class="math display">\[
+o_{j}=\max \left\{z_{1}, z_{2}, \ldots, z_{(n-t+1)}\right\}
+\]</span> 此处的n是整个⽂章的单词⻓度，t是窗⼝的⼤⼩。对于所有卷积核做完如上操作得到的结果为： <span class="math display">\[
+O=\left\{o_{1}, o_{2}, o_{3}, \ldots, o_{n_{1}}\right\}
+\]</span> 其中<span class="math inline">\(n_{1}\)</span>表示卷积核的个数</p></li>
+<li><p>Fully-connected layer：将Max-pooling layer的结果做⼀次全连接的映射，得到的结果即为： <span class="math display">\[
+\mathbf{x}_{\mathbf{u}}=f(W \times O+g)
+\]</span></p></li>
+</ul>
+<p>通过如上的模型可以得到：user和item的向量表示。然后将user和item的向量表示输⼊最后⼀层交互层 可以得到⽤于对于某个商品的评分，交互层使⽤了分解机（Factorization Machine) 机制，公式如下： <span class="math display">\[
+J=\hat{w}_{0}+\sum_{i=1}^{|\hat{z}|} \hat{w}_{i} \hat{z}_{i}+\sum_{i=1}^{|\hat{z}|} \sum_{j=i+1}^{|\hat{z}|}\left\langle\hat{\mathbf{v}}_{i}, \hat{\mathbf{v}}_{j}\right\rangle \hat{z}_{i} \hat{z}_{j}
+\]</span> 其重要作⽤是对⼀阶特征和⼆阶特征进⾏融合，⽤来预测评分。其中<span class="math inline">\(\left\langle\hat{\mathbf{v}}_{i}, \hat{\mathbf{v}}_{j}\right\rangle\)</span>⽤来确定⼆阶特征的权重。</p>
+<h2 id="训练">训练</h2>
+<p>⽬标函数为： <span class="math display">\[
+J=\hat{w}_{0}+\sum_{i=1}^{|\hat{z}|} \hat{w}_{i} \hat{z}_{i}+\sum_{i=1}^{|\hat{z}|} \sum_{j=i+1}^{|\hat{z}|}\left\langle\hat{\mathbf{v}}_{i}, \hat{\mathbf{v}}_{j}\right\rangle \hat{z}_{i} \hat{z}_{j}
+\]</span> 其⽬标就是对于<span class="math inline">\(-\hat{z}_{i}\)</span>最⼩化<span class="math inline">\(J\)</span>，从⽽通过链式法则实现反向传播，即： <span class="math display">\[
+\frac{\partial J}{\partial \hat{z}_{i}}=\hat{w}_{i}+\sum_{j=i+1}^{|\hat{z}|}\left\langle\hat{\mathbf{v}}_{i}, \hat{\mathbf{v}}_{j}\right\rangle \hat{z}_{j}
+\]</span> 在这⾥我们使⽤RMSprop，它是梯度下降的⾃适应版本，会根据梯度的绝对值⾃适应的控制步⻓。具体 的做法如下⾯公式所示： <span class="math display">\[
+r_{t} \leftarrow 0.9\left(\frac{\partial J}{\partial \theta}\right)^{2}+0.1 r_{t-1}
+\]</span></p>
+<p><span class="math display">\[
+\theta \leftarrow \theta-\left(\frac{\lambda}{\sqrt{r_{t}}+\epsilon}\right) \frac{\partial J}{\partial \theta}
+\]</span></p>
+<h2 id="实验">实验</h2>
+<h3 id="数据集">数据集</h3>
+<ol type="1">
+<li>Yelp：⼀个对于饭店评论的数据集，包含1 W条评论和打分</li>
+<li>Amazon：包含来意与亚⻢逊⽹站的对于商品的评论和打分，包含21类商品和143.7 million条评 论，是⽬前最⼤的针对商品评论的数据库</li>
+<li>Beer：这是⼀个对于啤酒的评论数据库</li>
+</ol>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/204721-638354.png" /></p>
+<h2 id="实验设置">实验设置</h2>
+<ol type="1">
+<li><p>进⾏卷积时，卷积核的个数<span class="math inline">\(n_{1}\)</span>，会从取10-400进⾏实验，最终设置为100</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205315-901372.png" style="zoom:50%;" /></p></li>
+<li><p>最终进⾏分解机前潜在因⼦的数⽬，即<span class="math inline">\(\left|\mathbf{x}_{\mathbf{u}}\right|\)</span>和<span class="math inline">\(\left|\mathbf{y}_{\mathbf{i}}\right|\)</span>的⼤⼩会取5-100进⾏实验，最终设置为50</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205336-557190.png" style="zoom:50%;" /></p></li>
+<li><p>CNN的窗⼝⼤⼩设置为3</p></li>
+<li><p>batch size设置为100</p></li>
+<li><p>学习率设置为0.002</p></li>
+<li><p>实验的评价标准：采⽤MSE作为评价标准，即： <span class="math display">\[
+M S E=\frac{1}{N} \sum_{n=1}^{N}\left(r_{n}-\hat{r}_{n}\right)^{2}
+\]</span></p></li>
+</ol>
+<h2 id="实验结果">实验结果</h2>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/05/205006-514082.png" /></p>
+<p>通过⽐较可以发现，我们的模型在各个数据库⽅⾯均优于之前的模型，同样我们可以得出如下结论：</p>
+<ol type="1">
+<li>所有的模型在Beer数据库的表现都⽐其他两个数据库好，是因为其他两个数据库⽐较稀疏</li>
+<li>考虑了评论的模型⽐没有考虑评论的模型（PMF，MF）表现要好</li>
+<li>同时考虑了评论和rating的模型（CTR，HFT）表现要⽐只考虑评论的模型（LDA）取得的效果好</li>
+</ol>
+<h2 id="模型分析">模型分析</h2>
+<p>为了验证我们的提出的模型的创新点，即</p>
+<ol type="1">
+<li><p>相互协作的两个神经⽹络能否通过合作有效的从评论中学习特征?</p>
+<p>对此我们提出了如下的实验，DeepCoNN-User and DeepCoNN-Item，即分别替换了item和user 直接为⼀组vector进⾏训练，实验结果证明DeepCoNN的效果最好</p></li>
+<li><p>word embedding是否有效的挖掘了语义信息和情感信息？</p>
+<p>对此我们提出了如下的实验，DeepCoNN-TFIDF and DeepCoNN-Random，分别以TFIDF和 random作为模型的输⼊来训练模型，最终实验表明word embedding的效果最好</p></li>
+<li><p>共享层对于提升预测的准确性有多⼤的帮助？</p>
+<p>对此我们做出如下的实验，设计了DeepCoNN-DP模型，即⽤⼀个更简单的⽬标函数来替换分解机 模型，实验证明分解机模型的效果更好</p></li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读</p><p><a href="https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/">https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Xdren</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-03-05</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-03-05</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="icon" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a><a class="icon" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/review-based-recommendation/">review-based recommendation</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=5ef30ed0b71a170012eece9c&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/03/01/migrate-blog/"><span class="level-item">Hexo博客迁移记录</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://xdren69.github.io/2021/03/05/reviewRecsys-DeepCoNN/';
+            this.page.identifier = '2021/03/05/reviewRecsys-DeepCoNN/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'myblog-57tixcutzr' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="xdren"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">xdren</p><p class="is-size-6 is-block">master student in computer science</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Wu han, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">36</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">13</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/xdren69" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/xdren69"><i class="fab fa-github"></i></a></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#摘要"><span class="level-left"><span class="level-item">1</span><span class="level-item">摘要</span></span></a></li><li><a class="level is-mobile" href="#创新"><span class="level-left"><span class="level-item">2</span><span class="level-item">创新</span></span></a></li><li><a class="level is-mobile" href="#模型"><span class="level-left"><span class="level-item">3</span><span class="level-item">模型</span></span></a></li><li><a class="level is-mobile" href="#训练"><span class="level-left"><span class="level-item">4</span><span class="level-item">训练</span></span></a></li><li><a class="level is-mobile" href="#实验"><span class="level-left"><span class="level-item">5</span><span class="level-item">实验</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据集"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">数据集</span></span></a></li></ul></li><li><a class="level is-mobile" href="#实验设置"><span class="level-left"><span class="level-item">6</span><span class="level-item">实验设置</span></span></a></li><li><a class="level is-mobile" href="#实验结果"><span class="level-left"><span class="level-item">7</span><span class="level-item">实验结果</span></span></a></li><li><a class="level is-mobile" href="#模型分析"><span class="level-left"><span class="level-item">8</span><span class="level-item">模型分析</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li><li><a class="level is-mobile" href="http://github.com" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">GitHub</span></span><span class="level-right"><span class="level-item tag">github.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Datawhale%E5%AD%A6%E4%B9%A0%E6%89%8B%E8%AE%B0/"><span class="level-start"><span class="level-item">Datawhale学习手记</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/NLP/"><span class="level-start"><span class="level-item">NLP</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/information-retrieval/"><span class="level-start"><span class="level-item">information retrieval</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper-reading/"><span class="level-start"><span class="level-item">paper reading</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/categories/pytorch-learning/"><span class="level-start"><span class="level-item">pytorch-learning</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/recsys/"><span class="level-start"><span class="level-item">recsys</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/topic-research/"><span class="level-start"><span class="level-item">topic research</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><span class="level-start"><span class="level-item">环境配置</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E9%9A%8F%E6%83%B3/"><span class="level-start"><span class="level-item">随想</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-03-05T07:30:13.000Z">2021-03-05</time></p><p class="title"><a href="/2021/03/05/reviewRecsys-DeepCoNN/">(DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读</a></p><p class="categories"><a href="/categories/paper-reading/">paper reading</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-03-01T13:36:11.000Z">2021-03-01</time></p><p class="title"><a href="/2021/03/01/migrate-blog/">Hexo博客迁移记录</a></p><p class="categories"><a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-03-01T12:59:03.000Z">2021-03-01</time></p><p class="title"><a href="/2021/03/01/newsRecsys-DKN/">(DKN)Deep Knowledge-Aware Network for News Recommendation 论文阅读</a></p><p class="categories"><a href="/categories/paper-reading/">paper reading</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-03-01T12:56:36.000Z">2021-03-01</time></p><p class="title"><a href="/2021/03/01/newsRecsys-KRED/">(KRED)Knowledge-Aware Document Representation for News 论文阅读</a></p><p class="categories"><a href="/categories/paper-reading/">paper reading</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-03-01T12:52:47.000Z">2021-03-01</time></p><p class="title"><a href="/2021/03/01/newsRecsys-TEKGR/">(TEKGR)News Recommendation with Topic-Enriched Knowledge Graphs 论文阅读</a></p><p class="categories"><a href="/categories/paper-reading/">paper reading</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2021/03/"><span class="level-start"><span class="level-item">三月 2021</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/12/"><span class="level-start"><span class="level-item">十二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/11/"><span class="level-start"><span class="level-item">十一月 2020</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">十月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/09/"><span class="level-start"><span class="level-item">九月 2020</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/08/"><span class="level-start"><span class="level-item">八月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/07/"><span class="level-start"><span class="level-item">七月 2020</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">六月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/GNN/"><span class="tag">GNN</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo-Icarus/"><span class="tag">Hexo,Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NLP/"><span class="tag">NLP</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RL/"><span class="tag">RL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/cuda/"><span class="tag">cuda</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/datawhale/"><span class="tag">datawhale</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/deep-learning/"><span class="tag">deep learning</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/entity-disambiguation/"><span class="tag">entity disambiguation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/item-recommendation/"><span class="tag">item recommendation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/knowledge-graph/"><span class="tag">knowledge graph</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/news-recommendation/"><span class="tag">news recommendation</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/pytorch/"><span class="tag">pytorch</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/review-based-recommendation/"><span class="tag">review-based recommendation</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a><p class="is-size-7"><span>&copy; 2021 Xdren</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/mhchem.js" defer></script><script>window.addEventListener("load", function() {
+            document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
+                renderMathInElement(element);
+            });
+        });</script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
