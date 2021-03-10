@@ -17,6 +17,8 @@ excerpt: 发表于2020 CIKM的有关新闻推荐的论文
 
 ![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202012/02/161006-200573.png)
 
+
+
 ### 模型结构
 
 整体模型分为三层，即：

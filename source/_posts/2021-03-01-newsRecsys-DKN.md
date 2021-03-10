@@ -17,6 +17,12 @@ excerpt: 发表于2020 WWW的有关新闻推荐的论文
 
 
 
+### 创新点
+
+1.  learn user representations based on the relevance between the representations of clicked and candidate news
+
+
+
 ### News encoder
 
 对于每一个news tittle一共要学习三个层面得embedding，分别是word embedding, entity embedding以及contextual entity embedding，其中entity embedding和contextual entity embedding的学习如下：

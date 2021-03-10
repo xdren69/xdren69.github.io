@@ -11,12 +11,16 @@ excerpt: 发表于2020 RecSys的有关新闻推荐的论文
 
 ### Intro
 
-正如文章的名字Knowledge-Aware Document Representation for News Recommendations，这篇文章更注重的是创建一个位于任务上游的news representation，为位于下游的新闻推荐子任务提供类似BERT在NLU领域的工具。
+正如文章的名字Knowledge-Aware Document Representation for News Recommendations，**这篇文章更注重的是创建一个位于任务上游的news representation，为位于下游的新闻推荐子任务提供类似BERT在NLU领域的工具**。
+
+
 
 ### 创新点
 
 1.  认为现存的文档理解模型要么是没有考虑知识图谱信息，比如BERT；要么是依赖于特殊的文章编码模型，以至于缺乏泛化能力和效率，比如DKN。本篇文章**将知识图谱与BERT相结合**
 2.  对于每一个实体在经过知识图谱表示层后，又加入了上下文信息，即context embedding层
+
+
 
 ### 模型
 
@@ -48,6 +52,8 @@ excerpt: 发表于2020 RecSys的有关新闻推荐的论文
 
 -   stage1：we alternately train different tasks every few mini-batches. 
 -   stage2：we only include the target task’s data to finalize a task-specific model. 
+
+
 
 ### 反思
 
