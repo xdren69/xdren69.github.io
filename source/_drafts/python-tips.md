@@ -64,6 +64,54 @@ print(f"MIN={MIN},MAX={MAX}")
 
 
 
+## collections模块
+
+### Counter
+
+>   是一个简单的计数器，例如，可以用来统计字符出现的个数
+
+```python
+from collections import Counter
+
+tasks = ["A","A","A","B","B","B"]
+freq = Counter(tasks)
+print(freq)
+print(freq.values())
+print(freq.keys())
+
+# Counter({'A': 3, 'B': 3})
+# dict_values([3, 3])
+# dict_keys(['A', 'B'])
+```
+
+
+
+## 常用数学计算
+
+### 开方
+
+```python
+import math
+a = math.sqrt(16)
+```
+
+### 乘方
+
+```python
+# 方法一
+res = pow(4,3)
+# 方法二
+res = 4**3
+```
+
+### 最大数与最小数
+
+```python
+import sys
+max_num = sys.maxsize
+min_num = -(sys.maxsize-1)
+```
+
 
 
 ## 参考

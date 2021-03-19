@@ -22,19 +22,25 @@ excerpt: 这是一篇关于在16.04和18.04ubuntu系统下配置cuda10.1,conda�
 
 
 
-### 安装前的下载
+### 版本检查
 
 本文采用cuda和驱动分开安装，具体流程如下：
 
 1.  安装前先在[NVIDIA官网](https://www.nvidia.cn/Download/Find.aspx?lang=cn)查看Nvidia显卡的型号和驱动的对应情况:
+
 2.  然后在[cuda官网](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html)查看cuda版本和驱动的对应情况：
+
+    >   从这里可以看出cuda对于驱动的版本是向上兼容的！所以我们优先满足第1步中显卡对应的驱动即可！
+
+    ![cuda版本与驱动的对应关系](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/17/181742-129705.png)
+
 3.  然后开始正式安装
 
 
 
 ### 正式安装
 
-1.  禁用ubuntu系统自带的nouveau驱动：
+1.  （第一次安装时需要）禁用ubuntu系统自带的nouveau驱动：
 
     ```shell
     sudo gedit /etc/modprobe.d/blacklist.conf
@@ -110,7 +116,8 @@ excerpt: 这是一篇关于在16.04和18.04ubuntu系统下配置cuda10.1,conda�
     sudo service lightdm start
     ```
 
-    
+
+
 
 ### 卸载NVIDIA驱动
 
@@ -145,4 +152,65 @@ sudo apt autoremove
 ```
 
 
+
+
+
+## 重装驱动
+
+>   有时候驱动会莫名其妙消失，这时候只需要重装驱动即可！具体步骤如下：
+
+
+
+### 卸载原始NVIDIA驱动
+
+首先执行官方推荐的卸载
+
+```
+sudo /usr/bin/nvidia-uninstall
+```
+
+然后卸载相关的包
+
+```
+sudo apt-get --purge remove nvidia*
+sudo apt autoremove
+```
+
+
+
+### 重装驱动
+
+1.  关闭图形界面：
+
+    首先按``CTRL+ALT+F1``（1~6均为命令行界面，7为图形界面）进入命令行界面
+
+    然后执行如下命令关闭图形界面：
+
+    ```shell
+    sudo service lightdm stop
+    ```
+
+    
+
+2.  安装驱动：（同之前）
+
+    ```shell
+    sudo sh ./NVIDIA-Linux-x86_64-***.***.run --no-opengl-files
+    ```
+
+    检测安装成果：输入如下指令
+
+    ```shell
+    nvidia-smi
+    ```
+
+    若显示显卡则代表安装成功
+
+    
+
+3.  打开图形界面：
+
+    ```shell
+    sudo service lightdm start
+    ```
 
