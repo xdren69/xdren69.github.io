@@ -84,6 +84,24 @@ print(freq.keys())
 # dict_keys(['A', 'B'])
 ```
 
+### defaultdict
+
+>   使用dict时，如果引用的Key不存在，就会抛出KeyError。如果希望key不存在时，返回一个默认值，就可以用defaultdict
+>
+>   注意默认值是调用函数返回的，而函数在创建defaultdict对象时传入。
+
+```python
+from collections import defaultdict
+
+a = defaultdict(list)
+# 直接使用即可，默认a[1]已经存在一个空的list
+a[1].append('a') 
+```
+
+
+
+
+
 
 
 ## 常用数学计算
@@ -114,11 +132,60 @@ min_num = -(sys.maxsize-1)
 
 
 
+## 常见STL
+
+
+
+## 循环变量
+
+-   python的循环变量在循环之外仍旧可以使用，例如
+
+    ```python
+    
+    ```
+
+
+
+## 字符串
+
+-   对字符串进行重新排序
+
+    ```python
+    a = "dbca"
+    b = "".join(sorted(a))
+    print(b)
+    # "abcd"
+    ```
+
+-   字符与ASCII的转化
+
+    ```python
+    ord('a')
+    ```
+
+    
+
+## List
+
+Python中list可以通过“==”来判断相等，但是里面相同元素的排列顺序必须相同
+
+```python
+a = [1,2,3]
+b = [1,2,3]
+c = [2,1,3]
+a == b # True
+a == c # False
+```
+
+
+
+
+
 ## 参考
 
 [1] [一文搞懂Python函数（匿名函数、嵌套函数、闭包、装饰器）！](https://bbs.huaweicloud.com/blogs/183686)
 
-
+[2] []()
 
 
 
