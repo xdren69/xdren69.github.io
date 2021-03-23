@@ -16,7 +16,7 @@ excerpt: 这是一篇对于实体消歧现有工作的调研
 
 在一段文本中，由于文本和语言的多态性，一个语言字段在不考虑上下文的情况下可能对应多个实体，为了将文中的实体与知识图谱中相应的实体正确对应，提出了实体消歧问题。
 
->   注：在文本中需要与知识图谱中的entity相对应的文字段称为mention
+>   注：在文本中需要与知识图谱中的entity相对应的文字段称为mention，与mention相对应的entity称为referent entity
 
 
 
@@ -40,6 +40,8 @@ excerpt: 这是一篇对于实体消歧现有工作的调研
 
 
 ## Collective Entity Linking in Web Text: A Graph-Based Method
+
+>   之前的做法：通过wiki中的对于entity的描述，提取出相应的实体特征；再从mention的上下文中提取出关于mention的特征，对两者之间进行相似度匹配
 
 ### 创新点
 
