@@ -7,7 +7,7 @@ tags:
 toc: true
 categories:
   - paper reading
-excerpt: 发表于2021 AAAI的有关新闻推荐的论文，是目前为止第一篇在新闻推荐领域里讨论fairness的文章
+excerpt: 发表于2021 WWW的有关新闻推荐的论文，是目前为止第一篇在新闻推荐领域里讨论fairness的文章
 date: 2021-03-06 16:53:29
 ---
 
@@ -20,7 +20,7 @@ date: 2021-03-06 16:53:29
 
 <img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/03/160930-167891.png" style="zoom:50%;" />
 
-用论文中的图片来解释：这里我们以性别为例子来解释新闻推荐中的fairness问题，通过用户的过往点击历史，模型可以学到用户A,B是女性，用户C,D是男性。如果对用户D进行新闻推荐时，因为用户是男性，模型会根据大多数男性的兴趣为用户进行推荐，不会为该用户推荐左侧的新闻。而左侧新闻有关Fashion，正好是用户D的兴趣点。
+用论文中的图片来解释：这里我们以性别为例子来解释新闻推荐中的fairness问题，通过用户的过往点击历史，模型可以学到用户A,B是女性，用户C,D是男性。如果对用户D进行新闻推荐时，因为用户是男性，模型会根据大多数男性的兴趣为用户进行推荐（即NBA），不会为该用户推荐左侧的新闻。而左侧新闻有关Fashion，正好是用户D的兴趣点。
 
 
 
@@ -89,7 +89,13 @@ user Model部分news Model部分与[NRMS模型]()采用同样的建模方式
 
 ## 实验结果
 
+### Fairness对比
 
+![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/122156-637482.png)
+
+### 推荐指标对比
+
+![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/122322-522008.png)
 
 
 

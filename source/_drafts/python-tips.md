@@ -167,6 +167,8 @@ min_num = -(sys.maxsize-1)
 
 ## List
 
+### list之间的比较
+
 Python中list可以通过“==”来判断相等，但是里面相同元素的排列顺序必须相同
 
 ```python
@@ -175,6 +177,16 @@ b = [1,2,3]
 c = [2,1,3]
 a == b # True
 a == c # False
+```
+
+
+
+### range() 和list之间的转换
+
+```python
+a = range(100)
+list_1 = [*a]
+list_2 = list(a)
 ```
 
 
