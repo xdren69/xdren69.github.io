@@ -1,5 +1,5 @@
 ---
-title: (KGAT)Knowledge Graph Attention Network for Recommendation
+title: (KGAT)Knowledge Graph Attention Network for Recommendation 论文笔记
 tags:
   - item recommendation
   - knowledge graph
@@ -105,7 +105,7 @@ $$
 
 ### Model Prediction
 
-为了防止图神经网络的过平滑，将多层graph representation拼接起来：
+**为了防止图神经网络的过平滑**，将多层graph representation拼接起来：
 $$
 \mathrm{e}_{u}^{*}=\mathrm{e}_{u}^{(0)}\|\cdots\| \mathrm{e}_{u}^{(L)}, \quad \mathrm{e}_{i}^{*}=\mathrm{e}_{i}^{(0)}\|\cdots\| \mathrm{e}_{i}^{(L)}
 $$

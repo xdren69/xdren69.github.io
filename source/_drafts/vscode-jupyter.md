@@ -1,5 +1,5 @@
 ---
-title: vscode+jupyter 配置问题记录
+title: vscode中配置jupyter问题记录
 tags:
 - 环境配置
 ---

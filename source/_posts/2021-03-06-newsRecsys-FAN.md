@@ -1,7 +1,7 @@
 ---
 title: >-
   (FAN)Fairness-aware News Recommendation with Decomposed Adversarial Learning
-  论文阅读
+  论文笔记
 tags:
   - news recommendation
 toc: true

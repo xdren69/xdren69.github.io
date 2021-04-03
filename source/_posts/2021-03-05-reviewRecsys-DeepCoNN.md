@@ -1,5 +1,5 @@
 ---
-title: (DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文阅读
+title: (DeepCoNN)Joint Deep Modeling of Users and Items Using Reviews for Recommendation 论文笔记
 date: 2021-03-05 15:30:13
 toc: true
 categories:

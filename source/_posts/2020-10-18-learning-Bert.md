@@ -1,5 +1,5 @@
 ---
-title: 对于Bert模型的学习
+title: Bert模型 学习笔记
 date: 2020-10-18 10:57:27
 toc: true
 categories:

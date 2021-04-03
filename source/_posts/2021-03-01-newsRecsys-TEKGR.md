@@ -1,5 +1,5 @@
 ---
-title: (TEKGR)News Recommendation with Topic-Enriched Knowledge Graphs 论文阅读
+title: (TEKGR)News Recommendation with Topic-Enriched Knowledge Graphs 论文笔记
 date: 2021-03-01 20:52:47
 toc: true
 categories:

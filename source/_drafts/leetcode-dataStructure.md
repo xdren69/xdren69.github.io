@@ -1,5 +1,5 @@
 ---
-title: leetcode刷题笔记
+title: leetcode--常用数据结构
 tags:
 ---
 
@@ -90,13 +90,13 @@ while stack or root:
     while root:
         stack.append(root)
         root = root.left
-        root = stack.pop()
-        # 这里是需要执行的主要代码
-        if root.val <= preNum:
-            return False
-        #-------------------#
-        preNum = root.val
-        root = root.right
+    root = stack.pop()
+    # 这里是需要执行的主要代码
+    if root.val <= preNum:
+        return False
+    #-------------------#
+    preNum = root.val
+    root = root.right
 ```
 
 
@@ -133,9 +133,8 @@ que = queue.PriorityQueue()
 
 # 优先级队列put的是一个元组，(优先级,数据)，优先级数越小，级别越高
 que.put((3,'ddddd'))
+order, string = que.get()
 ```
-
-
 
 
 
@@ -145,12 +144,13 @@ que.put((3,'ddddd'))
 
 >   通过左右两个下标来维护一个滑动的窗口
 
-相关题型：
-
 
 
 ## 链表
 
 ### 快慢指针
 
->   类似于滑动窗口                                                                                                                                                                                                                                                                                   
+>   存在以下两种使用情况：
+>
+>   1.  快指针每次走两步，慢指针每次走一步   
+>   2.  快指针比慢指针先走k步                                                                                                                                                                                                                                                                               

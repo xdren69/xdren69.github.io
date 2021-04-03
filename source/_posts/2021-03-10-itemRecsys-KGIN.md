@@ -1,7 +1,7 @@
 ---
 title: >-
   (KGIN)Learning Intents behind Interactions with Knowledge Graph for
-  Recommendation 论文阅读
+  Recommendation 论文笔记
 tags:
   - item recommendation
   - knowledge graph

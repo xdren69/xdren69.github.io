@@ -1,5 +1,5 @@
 ---
-title: 对于transformer模型的学习
+title: transformer模型 学习笔记
 date: 2020-10-13 10:02:07
 toc: true
 categories:

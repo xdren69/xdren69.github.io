@@ -1,5 +1,5 @@
 ---
-title: (DKN)Deep Knowledge-Aware Network for News Recommendation 论文阅读
+title: (DKN)Deep Knowledge-Aware Network for News Recommendation 论文笔记
 date: 2021-03-01 20:59:03
 toc: true
 categories:

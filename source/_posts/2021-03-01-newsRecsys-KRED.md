@@ -1,5 +1,5 @@
 ---
-title: (KRED)Knowledge-Aware Document Representation for News 论文阅读
+title: (KRED)Knowledge-Aware Document Representation for News 论文笔记
 date: 2021-03-01 20:56:36
 toc: true
 categories:
