@@ -1,7 +1,14 @@
 ---
 title: leetcode--常用数据结构
 tags:
+  - Data Structure
+toc: true
+categories:
+  - leetcode
+excerpt: 本文记录了leetcode中的一些常用数据结构，以及相应的Python调用方式
+date: 2021-04-05 21:55:22
 ---
+
 
 
 
@@ -81,9 +88,7 @@ heap[0]
 
 ## 树
 
-### python 代码
-
-1.  利用栈实现中序遍历
+### 利用栈实现中序遍历
 
 ```python
 while stack or root:
@@ -103,9 +108,7 @@ while stack or root:
 
 ## 队列
 
-### python代码
-
-#### 先入先出队列
+### 先入先出队列
 
 ```python
 import queue
@@ -125,7 +128,7 @@ que.empty()
 
 
 
-#### 优先级队列
+### 优先级队列
 
 ```python
 # 优先级队列
@@ -138,11 +141,28 @@ order, string = que.get()
 
 
 
+## 字符串
+
+注：Python的字符串不能通过下标修改，即进行如下操作时：
+
+```python
+string = 'abcdafg'
+string[4] = 'e'
+```
+
+会出现报错：
+
+```python
+TypeError: 'str' object does not support item assignment
+```
+
+
+
 ## 数组
 
-### 滑动窗口
+### 滑动窗口（双指针）
 
->   通过左右两个下标来维护一个滑动的窗口
+>   滑动窗口的原理：如果我们依次递增地枚举子串的起始位置，那么子串的结束位置也是递增的（或者递减的）
 
 
 

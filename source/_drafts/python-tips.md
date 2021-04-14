@@ -13,3 +13,5 @@ with open(filename1, 'rb') as fp1, open(filename2, 'rb') as fp2, open(filename3,
 
 
 
+## yield 函数（生成器）
+
