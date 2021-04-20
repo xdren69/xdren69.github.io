@@ -273,6 +273,28 @@ list_2 = list(a)
 
 
 
+## 自定义类
+
+-   在编程中经常会遇到对自定义对象的排序，堆维护，优先级队列维护的问题，这就需要数据结构中的元素可比较大小，由于heapq或者list.sort()都只使用小于<比较，所以只需要定义类的\_\_lt\_\_()方法即可
+
+举例如下：
+
+```python
+class Node:
+    def __init__(self, x):
+        self.val = x
+        # 0.left;1.right
+        self.flag  = -1
+        self.father = None
+
+    def __lt__(self, other):
+        return self.val < other.val
+```
+
+
+
+
+
 ## 参考
 
 [1] [一文搞懂Python函数（匿名函数、嵌套函数、闭包、装饰器）！](https://bbs.huaweicloud.com/blogs/183686)
