@@ -1,5 +1,5 @@
 ---
-title: leetcode--常用数据结构
+title: leetcode刷题笔记-常用数据结构
 tags:
   - Data Structure
 toc: true

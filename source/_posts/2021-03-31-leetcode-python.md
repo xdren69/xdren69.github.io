@@ -1,5 +1,5 @@
 ---
-title: leetcode-Python常用语法
+title: leetcode刷题笔记-Python常用语法
 date: 2021-03-31 13:19:43
 tags:
   - Python

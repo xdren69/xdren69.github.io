@@ -1,5 +1,5 @@
 ---
-title: leetcode刷题笔记--并查集
+title: leetcode刷题笔记-并查集
 date: 2021-03-30 19:20:54
 tags:
   - disjoint set
