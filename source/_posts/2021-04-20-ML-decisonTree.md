@@ -13,7 +13,7 @@ excerpt: 本文记录了机器学习中第二个算法——决策树算法，�
 >
 >   简单图示如下：
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210427100457678.png" style="zoom:80%;" />
+<img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210427141423.png" style="zoom:80%;" />
 
 ## 原理
 
