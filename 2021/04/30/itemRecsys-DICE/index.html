@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读 - Xdren&#039;s blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Xdren&#039;s blog"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Xdren&#039;s blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Conformity这里可以理解为屈从性，即用户对于流行商品的追求性。  创新点 这里的主要思路是：通过解离特征表示的方法。增强模型在不同I.I.D.分布的数据集上的表现。 当前面临的主要的三个挑战分别为：  conformity同时依赖于用户和商品，相同用户对不同商品的conformity是不同的，不同用户对同一商品的conformity是不同的 在无监督的环境下学习解离表"><meta property="og:type" content="blog"><meta property="og:title" content="(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读"><meta property="og:url" content="https://xdren69.github.io/2021/04/30/itemRecsys-DICE/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="Conformity这里可以理解为屈从性，即用户对于流行商品的追求性。  创新点 这里的主要思路是：通过解离特征表示的方法。增强模型在不同I.I.D.分布的数据集上的表现。 当前面临的主要的三个挑战分别为：  conformity同时依赖于用户和商品，相同用户对不同商品的conformity是不同的，不同用户对同一商品的conformity是不同的 在无监督的环境下学习解离表"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/105111-436109.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/115834-404097.png"><meta property="article:published_time" content="2021-04-30T14:32:17.000Z"><meta property="article:modified_time" content="2021-04-30T14:32:17.075Z"><meta property="article:author" content="Xdren"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/105111-436109.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2021/04/30/itemRecsys-DICE/"},"headline":"(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/105111-436109.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/115834-404097.png"],"datePublished":"2021-04-30T14:32:17.000Z","dateModified":"2021-04-30T14:32:17.075Z","author":{"@type":"Person","name":"Xdren"},"description":"Conformity这里可以理解为屈从性，即用户对于流行商品的追求性。\r \r 创新点\r 这里的主要思路是：通过解离特征表示的方法。增强模型在不同I.I.D.分布的数据集上的表现。\r 当前面临的主要的三个挑战分别为：\r \r conformity同时依赖于用户和商品，相同用户对不同商品的conformity是不同的，不同用户对同一商品的conformity是不同的\r 在无监督的环境下学习解离表"}</script><link rel="canonical" href="https://xdren69.github.io/2021/04/30/itemRecsys-DICE/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?14e57ad6d6de6c90603b6bea2182917a";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-170595403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-170595403-1');</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-04-30T14:32:17.000Z" title="2021/4/30 下午10:32:17">2021-04-30</time>发表</span><span class="level-item"><time dateTime="2021-04-30T14:32:17.075Z" title="2021/4/30 下午10:32:17">2021-04-30</time>更新</span><span class="level-item">11 分钟读完 (大约1667个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读</h1><div class="content"><p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/105111-436109.png" /></p>
+<blockquote>
+<p>Conformity这里可以理解为屈从性，即用户对于流行商品的追求性。</p>
+</blockquote>
+<h2 id="创新点">创新点</h2>
+<p>这里的主要思路是：通过解离特征表示的方法。增强模型在不同I.I.D.分布的数据集上的表现。</p>
+<p>当前面临的主要的三个挑战分别为：</p>
+<ol type="1">
+<li>conformity同时依赖于用户和商品，相同用户对不同商品的conformity是不同的，不同用户对同一商品的conformity是不同的</li>
+<li>在无监督的环境下学习解离表示本身是困难的</li>
+<li>一个交互可能来自于（interest，conformity）中的一个或两个原因，因此我们需要巧妙设计来结合多个原因</li>
+</ol>
+<h2 id="模型">模型</h2>
+<p>主要由以下三个部分组成：</p>
+<h3 id="causal-embedding">Causal Embedding</h3>
+<p>我们使用embedding而不是标量值来建模用户的interest和conformity（causes），用来解决conformity会随着item和user变动的问题。我们认为用户的点击来自于两个方面的原因，即：</p>
+<ol type="1">
+<li>the user’s interest in the item’s characteristics</li>
+<li>the user’s conformity towards the item’s popularity</li>
+</ol>
+<p>我们构建的<strong>causal graph</strong>为：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/115834-404097.png" style="zoom:67%;" /></p>
+<p>相应的causal model为： <span class="math display">\[
+S_{\mathrm{ui}}=S_{u i}^{\text {interest }}+S_{u i}^{\text {conformity }} \tag{1}
+\]</span> 相应的SCM（structural causal model）为： <span class="math display">\[
+\begin{array}{l}
+X_{u i}^{i n t}:=f_{1}\left(u, i, N^{i n t}\right) \\
+X_{u i}^{c o n}:=f_{2}\left(u, i, N^{c o n}\right) \\
+Y_{u i}^{\text {click }}:=f_{3}\left(X_{u i}^{i n t}, X_{u i}^{c o n}, N^{\text {click }}\right)
+\end{array}  \tag{2}
+\]</span> 在这里我们引入Causal Embedding，为每个用户设计相应的interest embedding和conformity embedding；与之相对应的，为每个商品也设计对应的characteristic embedding（在这里叫做interest）和popularity embedding（在这里叫做conformity）</p>
+<p>使用Causal Embedding将SCM细化得到： <span class="math display">\[
+\begin{array}{l}
+s_{u i}^{i n t}=\left\langle u^{(\text {int })}, i^{(\text {int })}\right\rangle , \\ 
+s_{u i}^{c o n}=\left\langle u^{(\text {con })}, i^{(\text {con })}\right\rangle , \\
+s_{u i}^{\text {click }}=s_{u i}^{i n t}+s_{u i}^{c o n} , 
+\end{array}  \tag{3}
+\]</span></p>
+<h3 id="disentangled-representation-learning">Disentangled Representation Learning</h3>
+<p>我们将训练数据根据不同的causes（user’s interest，user’s conformity）分为不同的cause-specific parts，为每种原因训练不同的embedding。</p>
+<p>但是根据数据集，我们只能知道用户是否点击了某个商品，无法知道是因为具体哪个cause而进行点击的。为了获得cause-specific的训练数据，我们引入了colliding effect这个概念！</p>
+<blockquote>
+<p><strong>colliding effect :</strong></p>
+<p>In fact, the two causes of a collider are independent variables. However, if we condition on the collider, the two causes become correlated with each other, and we call it colliding effect.</p>
+</blockquote>
+<p>根据这一概念我们将采样两类数据（其中<span class="math inline">\(M^{I}\)</span>， <span class="math inline">\(M^{C}\)</span>均是<span class="math inline">\(\mathbb{R}^{M \times N}\)</span>类型的矩阵，分别表示<strong>interest matching score</strong>和<strong>conformity matching score</strong>）：</p>
+<ul>
+<li><p>Case 1: 负样本的流行性低于正样本 <span class="math display">\[
+\begin{array}{l}
+M_{u a}^{C}&gt;M_{u b}^{C} \\
+M_{u a}^{I}+M_{u a}^{C}&gt;M_{u b}^{I}+M_{u b}^{C}
+\end{array}  \tag{4}
+\]</span></p></li>
+<li><p>Case 2: 负样本的流行性高于正样本 <span class="math display">\[
+\begin{array}{l}
+M_{u c}^{I}&gt;M_{u d}^{I} \\
+M_{u c}^{C}&lt;M_{u d}^{C} \\
+M_{u c}^{I}+M_{u c}^{C}&gt;M_{u d}^{I}+M_{u d}^{C}
+\end{array}  \tag{5}
+\]</span></p></li>
+</ul>
+<div id="1.2">
+
+
+<p>首先我们组装training instance为一个三元组 （u，i，j） 即一个正样本对应特定个数个负样本（）。将所有的training instance的集合称为<span class="math inline">\(O\)</span>，然后根据以上两个Case，将<span class="math inline">\(O\)</span>分为<span class="math inline">\(O_{1}\)</span> 和 <span class="math inline">\(O_{2}\)</span></p>
+<p>接下来，将采取结合矩阵分解和<strong>BPR Loss</strong>的方法来建模以上的<strong>不等式关系</strong>，借此来学习矩阵<span class="math inline">\(M^{I}\)</span>， <span class="math inline">\(M^{C}\)</span>。我们将整个学习过程化为四个步骤：</p>
+<ol type="1">
+<li><p><strong>Conformity Modeling</strong>：</p>
+<blockquote>
+<p>用于通过BPR Loss建模公式(4)，(5)中的关于conformity的不等式关系</p>
+</blockquote>
+<p><span class="math display">\[
+\begin{aligned}
+L_{\text {conformity }}^{O_{1}} &amp;=\sum_{(u, i, j) \in O_{1}} \operatorname{BPR}\left(\left\langle\boldsymbol{u}^{(\text {con })}, \boldsymbol{i}^{(\text {con })}\right\rangle,\left\langle\boldsymbol{u}^{(\text {con })}, \boldsymbol{j}^{(\text {con })}\right\rangle\right), \\
+L_{\text {conformity }}^{O_{2}} &amp;=\sum_{(u, i, j) \in O_{2}}-\mathrm{BPR}\left(\left\langle\boldsymbol{u}^{(\mathrm{con})}, \boldsymbol{i}^{(\mathrm{con})}\right\rangle,\left\langle\boldsymbol{u}^{(\mathrm{con})}, \boldsymbol{j}^{(\mathrm{con})}\right\rangle\right), \\
+L_{\text {conformity }}^{O_{1}+O_{2}} &amp;=L_{\text {conformity }}^{O_{1}}+{L}_{\text {conformity }}^{O_{2}} .
+\end{aligned}  \tag{6}
+\]</span></p></li>
+<li><p><strong>Interest Modeling</strong>：</p>
+<blockquote>
+<p>用于通过BPR Loss建模公式(5)中的关于interest的不等式关系</p>
+</blockquote>
+<p><span class="math display">\[
+L_{\text {interest }}^{O_{2}}=\sum_{(u, i, j) \in O_{2}} \operatorname{BPR}\left(\left\langle u^{(\text {int })}, i^{(\text {int })}\right\rangle,\left\langle u^{(\text {int })}, j^{(\text {int })}\right\rangle\right)  \tag{7}
+\]</span></p></li>
+<li><p><strong>Estimating Clicks</strong>：</p>
+<blockquote>
+<p>用于通过BPR Loss建模公式(4)，(5)中的关于最终点击率的不等式关系</p>
+</blockquote>
+<p><span class="math display">\[
+L_{\text {click }}^{O_{1}+O_{2}}=\sum_{(u, i, j) \in O} \operatorname{BPR}\left(\left\langle\boldsymbol{u}^{t}, \boldsymbol{i}^{t}\right\rangle,\left\langle\boldsymbol{u}^{t}, \boldsymbol{j}^{t}\right\rangle\right)  \tag{8}
+\]</span> 其中<span class="math inline">\(\boldsymbol{u}^{t}, \boldsymbol{i}^{t}\)</span> 和 <span class="math inline">\(\boldsymbol{j}^{t}\)</span>分别表示为： <span class="math display">\[
+\boldsymbol{u}^{t}=\boldsymbol{u}^{(\mathrm{int})}\left\|\boldsymbol{u}^{(\mathrm{con})}, \boldsymbol{i}^{t}=\boldsymbol{i}^{(\mathrm{int})}\right\| \boldsymbol{i}^{(\mathrm{con})}, \boldsymbol{j}^{t}=\boldsymbol{j}^{(\mathrm{int})} \| \boldsymbol{j}^{(\mathrm{con})}  \tag{9}
+\]</span></p></li>
+<li><p><strong>Discrepancy Task</strong>：</p>
+<blockquote>
+<p>目标是使得同一user/item之间的interest embedding和conformity embedding之间的区别加大，减小两者间共同包含的信息</p>
+</blockquote>
+<p>这里我们使用：distance correlation (dCor)来增强相应embedding之间的距离</p></li>
+</ol>
+<h3 id="multi-task-curriculum-learning">Multi-task Curriculum Learning</h3>
+<blockquote>
+<p>多任务学习：把多个相关（related）的任务放在一起学习，同时学习多个任务。</p>
+<p><strong>课程学习</strong>策略：进行从易到难的学习。</p>
+</blockquote>
+<p>对之前分解的四个子任务进行多任务学习，总的Loss为： <span class="math display">\[
+L=L_{\text {click }}{\mathrm{O}_{1}+\mathrm{O}_{2}}+\alpha\left(L_{\text {interest }}{\mathrm{O}_{2}}+{L}_{\text {conformity }}{\mathrm{O}_{1}+\mathrm{O}_{2}}\right)+\beta L_{\text {discrepancy }}  \tag{10}
+\]</span> 对于<a href="#1.2">之前</a>的training instance的组装，我们采用特殊的负采样方式，即<code>Popularity based Negative Sampling with Margin (PNSM)</code>，即：</p>
+<blockquote>
+<p>If the popularity of the positive sample is p, then we will sample negative instances from items with popularity larger than p + m<sub>up</sub>, or lower than p − m<sub>down</sub> , where m<sub>up</sub> and m<sub>down</sub> are positive margin values.</p>
+</blockquote>
+<p>这里我们通过动态调整超参数来实现<strong>课程学习</strong>策略，为了让模型的学习变得由易到难，整个过程展示如下：</p>
+<ul>
+<li>先让模型进行简单学习，即将m<sub>up</sub> and m<sub>down</sub> 设置的较大，使得正样本和负样本之间有很大的区分，使模型去学习具有高可信度的样例，同时将<span class="math inline">\(\alpha\)</span>的值设置较大</li>
+<li>随后逐渐增加难度，即按照0.9的比率对m<sub>up</sub>，m<sub>down</sub>和<span class="math inline">\(\alpha\)</span>进行衰退</li>
+</ul>
+<h2 id="数据集构造">数据集构造</h2>
+<ol type="1">
+<li>为了构造和训练集I.I.D.不相同的测试集，我们按照流行性的倒数对测试集中的交互记录进行抽样</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读</p><p><a href="https://xdren69.github.io/2021/04/30/itemRecsys-DICE/">https://xdren69.github.io/2021/04/30/itemRecsys-DICE/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Xdren</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-04-30</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-04-30</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="icon" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a><a class="icon" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=5ef30ed0b71a170012eece9c&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/04/30/recall-ESAM/"><span class="level-item">(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://xdren69.github.io/2021/04/30/itemRecsys-DICE/';
+            this.page.identifier = '2021/04/30/itemRecsys-DICE/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'myblog-57tixcutzr' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="xdren"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">xdren</p><p class="is-size-6 is-block">master student in computer science</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Wu han, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">58</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">11</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">18</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/xdren69" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/xdren69"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li><li><a class="level is-mobile" href="http://github.com" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">GitHub</span></span><span class="level-right"><span class="level-item tag">github.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Datawhale%E5%AD%A6%E4%B9%A0%E6%89%8B%E8%AE%B0/"><span class="level-start"><span class="level-item">Datawhale学习手记</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/NLP/"><span class="level-start"><span class="level-item">NLP</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/information-retrieval/"><span class="level-start"><span class="level-item">information retrieval</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/leetcode/"><span class="level-start"><span class="level-item">leetcode</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/machine-learning/"><span class="level-start"><span class="level-item">machine learning</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/paper-reading/"><span class="level-start"><span class="level-item">paper reading</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/pytorch-learning/"><span class="level-start"><span class="level-item">pytorch-learning</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/recsys/"><span class="level-start"><span class="level-item">recsys</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/topic-research/"><span class="level-start"><span class="level-item">topic research</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><span class="level-start"><span class="level-item">环境配置</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-30T14:32:17.000Z">2021-04-30</time></p><p class="title"><a href="/2021/04/30/itemRecsys-DICE/">(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-30T07:58:19.000Z">2021-04-30</time></p><p class="title"><a href="/2021/04/30/recall-ESAM/">(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-26T11:29:42.000Z">2021-04-26</time></p><p class="title"><a href="/2021/04/26/learning-to-rank/">learning to rank中的Listwise，Pairwise和Pointwise</a></p><p class="categories"><a href="/categories/recsys/">recsys</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-24T01:38:00.000Z">2021-04-24</time></p><p class="title"><a href="/2021/04/24/recall-PinnerSage/">recall-PinnerSage</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-23T12:53:34.000Z">2021-04-23</time></p><p class="title"><a href="/2021/04/23/leetcode-permutation-combination/">leetcode刷题笔记-排列组合</a></p><p class="categories"><a href="/categories/leetcode/">leetcode</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2021/04/"><span class="level-start"><span class="level-item">四月 2021</span></span><span class="level-end"><span class="level-item tag">12</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/03/"><span class="level-start"><span class="level-item">三月 2021</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/02/"><span class="level-start"><span class="level-item">二月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/12/"><span class="level-start"><span class="level-item">十二月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/11/"><span class="level-start"><span class="level-item">十一月 2020</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">十月 2020</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/09/"><span class="level-start"><span class="level-item">九月 2020</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/08/"><span class="level-start"><span class="level-item">八月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/07/"><span class="level-start"><span class="level-item">七月 2020</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">六月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Data-Structure/"><span class="tag">Data Structure</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GNN/"><span class="tag">GNN</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo-Icarus/"><span class="tag">Hexo,Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NLP/"><span class="tag">NLP</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RL/"><span class="tag">RL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/binary-search/"><span class="tag">binary search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/cuda/"><span class="tag">cuda</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/datawhale/"><span class="tag">datawhale</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/deep-learning/"><span class="tag">deep learning</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/disjoint-set/"><span class="tag">disjoint set</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/entity-disambiguation/"><span class="tag">entity disambiguation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/item-recommendation/"><span class="tag">item recommendation</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/knowledge-graph/"><span class="tag">knowledge graph</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/news-recommendation/"><span class="tag">news recommendation</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/pytorch/"><span class="tag">pytorch</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/review-based-recommendation/"><span class="tag">review-based recommendation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/text-representation/"><span class="tag">text representation</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a><p class="is-size-7"><span>&copy; 2021 Xdren</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/mhchem.js" defer></script><script>window.addEventListener("load", function() {
+            document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
+                renderMathInElement(element);
+            });
+        });</script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>

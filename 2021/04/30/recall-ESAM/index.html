@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记 - Xdren&#039;s blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Xdren&#039;s blog"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Xdren&#039;s blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文主要想要解决的问题是，在 召回层 中，由于 sample selection bias 导致的曝光样本与未曝光样本之间的 domain shift 问题  Sample selection bias 定义为：用于分析的数据使用了不能保证随机化得方法获得，因此从样本中分析的结果不能代表总体特征； 比如：  在大学中开展社会调查，实际上是condition on受访者上过大学 使"><meta property="og:type" content="blog"><meta property="og:title" content="(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记"><meta property="og:url" content="https://xdren69.github.io/2021/04/30/recall-ESAM/"><meta property="og:site_name" content="Xdren&#039;s blog"><meta property="og:description" content="本文主要想要解决的问题是，在 召回层 中，由于 sample selection bias 导致的曝光样本与未曝光样本之间的 domain shift 问题  Sample selection bias 定义为：用于分析的数据使用了不能保证随机化得方法获得，因此从样本中分析的结果不能代表总体特征； 比如：  在大学中开展社会调查，实际上是condition on受访者上过大学 使"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430164602.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223112.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430211715.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430214323.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430215819.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430221052.png"><meta property="og:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223054.png"><meta property="article:published_time" content="2021-04-30T07:58:19.000Z"><meta property="article:modified_time" content="2021-04-30T14:31:14.808Z"><meta property="article:author" content="Xdren"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430164602.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://xdren69.github.io/2021/04/30/recall-ESAM/"},"headline":"(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记","image":["https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430164602.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223112.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430211715.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430214323.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430215819.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430221052.png","https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223054.png"],"datePublished":"2021-04-30T07:58:19.000Z","dateModified":"2021-04-30T14:31:14.808Z","author":{"@type":"Person","name":"Xdren"},"description":"本文主要想要解决的问题是，在 召回层 中，由于 sample selection bias 导致的曝光样本与未曝光样本之间的 domain shift 问题\r \r Sample selection bias\r 定义为：用于分析的数据使用了不能保证随机化得方法获得，因此从样本中分析的结果不能代表总体特征；\r 比如：\r \r 在大学中开展社会调查，实际上是condition on受访者上过大学\r 使"}</script><link rel="canonical" href="https://xdren69.github.io/2021/04/30/recall-ESAM/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?14e57ad6d6de6c90603b6bea2182917a";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><!--!--><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-170595403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-170595403-1');</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-04-30T07:58:19.000Z" title="2021/4/30 下午3:58:19">2021-04-30</time>发表</span><span class="level-item"><time dateTime="2021-04-30T14:31:14.808Z" title="2021/4/30 下午10:31:14">2021-04-30</time>更新</span><span class="level-item">15 分钟读完 (大约2188个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>次访问</span></div></div><h1 class="title is-3 is-size-4-mobile">(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记</h1><div class="content"><blockquote>
+<p>本文主要想要解决的问题是，在 <strong>召回层</strong> 中，由于 <strong>sample selection bias</strong> 导致的曝光样本与未曝光样本之间的 <strong>domain shift</strong> 问题</p>
+</blockquote>
+<h2 id="sample-selection-bias">Sample selection bias</h2>
+<p>定义为：用于分析的数据使用了不能保证随机化得方法获得，因此从样本中分析的结果不能代表总体特征；</p>
+<p>比如：</p>
+<ol type="1">
+<li>在大学中开展社会调查，实际上是condition on受访者上过大学</li>
+<li>使用某个在线网站上的数据做分析，实际上是condition on用户会访问该网站</li>
+<li>分析从战场返回的战斗机上的弹孔位置，实际上是condition on飞机没有被击落</li>
+</ol>
+<p>用论文中的一张图来进行说明：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430164602.png" /></p>
+<p>可以看出曝光的商品中82.7%是hot的，也就是说82.7%的商品是经常出现在各个用户的曝光商品中的；而未曝光的商品中有85.2%的商品是长尾的，即几乎始终处于各个用户的未曝光列表中的。这样会导致我们的召回模型能够很好的学到已曝光商品的向量表征，但是无法学到未曝光商品的向量表征。目前采取的做法有：</p>
+<ol type="1">
+<li>（正向）纠正曝光样本与未曝光样本之间的 <strong>domain shift</strong> 问题</li>
+<li>（反向）在训练模型时，增强负采样对于负样本的选择，增强模型的学习难度，保证了模型对于负样本的向量表征，一般使用的是 <strong>hard negative</strong></li>
+</ol>
+<h2 id="召回策略">召回策略</h2>
+<p>目前的召回策略均是基于embedding的，整体流程如下： <span class="math display">\[
+\begin{array}{l}
+\boldsymbol{v}_{q}=f_{q}(q),\quad \boldsymbol{v}_{d}=f_{d}(d) 
+\end{array}
+\]</span></p>
+<p><span class="math display">\[
+S c_{q, d}=f_{s}\left(v_{q}, v_{d}\right)
+\]</span></p>
+<p>根据 <strong>domain shift</strong>，我们将问题归结为 <span class="math inline">\(f_{d}\)</span> 在处理未曝光样本时的问题</p>
+<h2 id="domain-shift">Domain shift</h2>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223112.png" /></p>
+<p>即曝光商品的向量表征空间与未曝光商品的向量表征空间不统一</p>
+<h2 id="本文的解决方法">本文的解决方法</h2>
+<blockquote>
+<p>我们称曝光的item组成的域为source domain，未曝光的item组成的域为target domain</p>
+</blockquote>
+<p>整体的解决方法一共分为三步：</p>
+<ol type="1">
+<li><p><strong>Domain Adaptation with Attribute Correlation Alignment</strong>：通过一种 <strong><em>间接</em></strong> 的特征对齐，将曝光商品与未曝光商品的向量表征空间统一起来，这时候source domain与target domain会发生重叠，即：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430211715.png" /></p>
+<blockquote>
+<p>此时我们会发现，由于target domain中的item没有标签，此时虽然domain发生了重叠，但是很多红色的target item都分类错误了；接下来我们的任务就主要集中在对target item进行正确的分类；一共分类两步！</p>
+</blockquote></li>
+<li><p><strong>Center-Wise Clustering for Source Clustering</strong>：通过第一步，我们可以使得target domain的分布屈从于source domain的分布，这一步我们使得source domain中的同一标签的item之间更加内聚，距离分类边界更远，即“<strong><em>高内聚，低耦合</em></strong>”，这样target也会屈从于这样的趋势。此时分布图会变成如下：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430214323.png" /></p></li>
+<li><p><strong>Self-Training for Target Clustering</strong>：我们通过上图可以看出，虽然相互间的分界线很明显，但是target item还是会存在分类错误的情况！原因依旧是因为大部分的target domain的商品没有标签！这一步我们会为每一个item打上 <strong><em>伪标签</em></strong>，通过伪标签对模型进行训练。经过最后一步，总体分布会变成下图：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430215819.png" /></p></li>
+</ol>
+<h2 id="具体算法">具体算法</h2>
+<blockquote>
+<p>注意：我们模型可以看做是一个 <strong><em>插件</em></strong> ，是对原本召回模型中的未曝光商品训练的加强</p>
+</blockquote>
+<h4 id="domain-adaptation-with-attribute-correlation-alignment">Domain Adaptation with Attribute Correlation Alignment</h4>
+<p>我们首先寻找特征与特征之间的相互关系，制造特征间的协方差矩阵。</p>
+<blockquote>
+<p>举个低维特征间相似性的例子，一个商品牌子越大，价格就越高；而一个商品的牌子和材料之间的关联程度就较弱，因此我们可以得到下图（a）：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430221052.png" /></p>
+<p>我们认为可以将这一地位特征间的相关性推导到高维特征，得到图（b）</p>
+</blockquote>
+<p>然后通过拟合source domain的<strong>协方差矩阵</strong>和target domain之间的<strong>协方差矩阵</strong>，实现source domain和target domain之间特征空间的 <strong><em>伪对齐</em></strong>。具体做法为：</p>
+<p>假设对于每个query "q"</p>
+<ul>
+<li>我们收集了n个“曝光item”(来自source domain)和用户对它们的反馈。这n个item经过<span class="math inline">\(f_{d}\)</span>映射，映射成<span class="math inline">\(D^{s} \in R^{n * L}\)</span>，L是embedding的维度</li>
+<li>我们再随机抽样n个“未曝光item”（来自target domain），它们经过<span class="math inline">\(f_{d}\)</span>映射，映射成<span class="math inline">\(D^{s} \in R^{n * L}\)</span></li>
+<li>我们要求：的L维高阶特征的两两之间（<span class="math inline">\(h_{j^{\prime}}^{s}\)</span>和<span class="math inline">\(h_{k}^{s}\)</span>）的协方差，与的L维高阶特征的两两之间（<span class="math inline">\(h_{j^{\prime}}^{t}\)</span>和<span class="math inline">\(h_{k}^{t}\)</span>）的协方差，两者之间的差值尽可能小</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+L_{D A} &amp;=\frac{1}{L^{2}} \sum_{(j, k)}\left(\boldsymbol{h}_{j}^{s \top} \boldsymbol{h}_{k}^{s}-\boldsymbol{h}_{j}^{t \top} \boldsymbol{h}_{k}^{t}\right)^{2} \\
+&amp;=\frac{1}{L^{2}}\left\|\operatorname{Cov}\left(D^{s}\right)-\operatorname{Cov}\left(D^{t}\right)\right\|_{F}^{2}
+\end{aligned}
+\]</span></p>
+<h4 id="center-wise-clustering-for-source-clustering">Center-Wise Clustering for Source Clustering</h4>
+<p>为了实现source domain内的“高耦合，低内聚”，我们加入如下Loss： <span class="math display">\[
+\begin{aligned}
+L_{D C}^{c} &amp;=\sum_{j=1}^{n} \max \left(0,\left\|\frac{\boldsymbol{v}_{d_{j}^{s}}}{\left\|\boldsymbol{v}_{d_{j}^{s}}\right\|}-\mathbf{c}_{q}^{y_{j}^{s}}\right\|_{2}^{2}-m_{1}\right) +\sum_{k=1}^{n_{y}} \sum_{u=k+1}^{n_{y}} \max \left(0, m_{2}-\left\|\mathbf{c}_{q}^{k}-\mathbf{c}_{q}^{u}\right\|_{2}^{2}\right)
+\end{aligned}
+\]</span> 其中： <span class="math display">\[
+\mathrm{c}_{q}^{k}=\frac{\sum_{j=1}^{n}\left(\delta\left(y_{j}^{s}=Y_{k}\right) \cdot \frac{v_{d}^{s}}{\left\|\boldsymbol{v}_{j_{j}^{s}}\right\|}\right)}{\sum_{j=1}^{n} \delta\left(y_{j}^{s}=Y_{k}\right)}
+\]</span> 第一个公式的理解如下：</p>
+<ul>
+<li>公式中的第1项是为了达到“同一类feedback中的item embedding”要“高内聚”的目标，其中 <span class="math inline">\(c_{q}^{y_{j}^{s}}\)</span> 代表属于某个feedback的所有item embedding的平均，作为这一类feedback的item embedding的中心</li>
+<li>公式中的第2项是为了达到“不同类feedback的item embedding”要“低耦合”的目标，表现在不同feedback的item embedding的中心要尽可能远</li>
+</ul>
+<h4 id="self-training-for-target-clustering">Self-Training for Target Clustering</h4>
+<p>添加伪标签的具体做法如下：</p>
+<ul>
+<li>训练中，如果根据当前模型，query "q"已经与某“未曝光item”的匹配得分相当低了（小于阈值p1），我们就认为这对&lt;&gt;是负样本，接下来的训练中，<span class="math inline">\(&lt;q, d^{t}&gt;\)</span>得分要变得越来越小，趋近0</li>
+<li>训练中，如果根据当前模型，query "q"已经与某“未曝光item”的匹配得分相当高了（大于阈值p2），我们就认为这对&lt;&gt;是正样本，接下来的训练中，<span class="math inline">\(&lt;q, d^{t}&gt;\)</span>得分要变得越来越大，趋近1</li>
+</ul>
+<p><strong>具体实现时，ESAM并不需要动态修改label。因为修改label的目的，仅仅是为了接下来的优化指明方向</strong>，所以ESAM使用如下辅助task达到同样的效果： <span class="math display">\[
+L_{D C}^{p}=-\frac{\sum_{j=1}^{n} \delta\left(S c_{q, d_{j}^{t}}&lt;p_{1} \mid S c_{q, d_{j}^{t}}&gt;p_{2}\right) S c_{q, d_{j}^{t}} \log S c_{q, d_{j}^{t}}}{\sum_{j=1}^{n} \delta\left(S c_{q, d_{j}^{t}}&lt;p_{1} \mid S c_{q, j}^{t}&gt;p_{2}\right)}
+\]</span> 其中<span class="math inline">\(\delta\)</span>是condition function，表示<strong>这种"伪label"只在预估的匹配得分太高或太低，即模型有充分自信时，才添加</strong>，之所要设置p1，p2这两个阈值，是因为：模型一开始无法得到很好的训练，对于target item的打分存在一定的容错，因此我们需要保护 [p1, p2] 中间这一段不做分类！</p>
+<h2 id="final">Final</h2>
+<p>总的Loss最终设置如下： <span class="math display">\[
+L_{a l l}=L_{s}+\lambda_{1} L_{D A}+\lambda_{2} L_{D C}^{c}+\lambda_{3} L_{D C}^{p}
+\]</span> 梯度下降的方式如下： <span class="math display">\[
+\Theta^{t+1}=\Theta^{t}-\eta \frac{\partial\left(L_{s}+\lambda_{1} L_{D A}+\lambda_{2} L_{D C}^{c}+\lambda_{3} L_{D C}^{p}\right)}{\partial \Theta}
+\]</span> 最终提升效果如下：</p>
+<p><img src="https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/20210430223054.png" /></p>
+<h2 id="reference">Reference</h2>
+<p>[1] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.10545">ESAM: Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qLBYIkevmBpZ84hTSlmh5g">阿里ESAM：用迁移学习解决召回中的样本偏差</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记</p><p><a href="https://xdren69.github.io/2021/04/30/recall-ESAM/">https://xdren69.github.io/2021/04/30/recall-ESAM/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Xdren</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-04-30</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-04-30</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="icon" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a><a class="icon" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=5ef30ed0b71a170012eece9c&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/04/30/itemRecsys-DICE/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/04/26/learning-to-rank/"><span class="level-item">learning to rank中的Listwise，Pairwise和Pointwise</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://xdren69.github.io/2021/04/30/recall-ESAM/';
+            this.page.identifier = '2021/04/30/recall-ESAM/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'myblog-57tixcutzr' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="xdren"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">xdren</p><p class="is-size-6 is-block">master student in computer science</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Wu han, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">58</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">11</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">18</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/xdren69" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/xdren69"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li><li><a class="level is-mobile" href="http://github.com" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">GitHub</span></span><span class="level-right"><span class="level-item tag">github.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Datawhale%E5%AD%A6%E4%B9%A0%E6%89%8B%E8%AE%B0/"><span class="level-start"><span class="level-item">Datawhale学习手记</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/NLP/"><span class="level-start"><span class="level-item">NLP</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/information-retrieval/"><span class="level-start"><span class="level-item">information retrieval</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/leetcode/"><span class="level-start"><span class="level-item">leetcode</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/machine-learning/"><span class="level-start"><span class="level-item">machine learning</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/paper-reading/"><span class="level-start"><span class="level-item">paper reading</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/pytorch-learning/"><span class="level-start"><span class="level-item">pytorch-learning</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/recsys/"><span class="level-start"><span class="level-item">recsys</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/topic-research/"><span class="level-start"><span class="level-item">topic research</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><span class="level-start"><span class="level-item">环境配置</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-30T14:32:17.000Z">2021-04-30</time></p><p class="title"><a href="/2021/04/30/itemRecsys-DICE/">(DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-30T07:58:19.000Z">2021-04-30</time></p><p class="title"><a href="/2021/04/30/recall-ESAM/">(ESAM)Discriminative Domain Adaptation with Non-Displayed Items to Improve Long-Tail Performance 论文笔记</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-26T11:29:42.000Z">2021-04-26</time></p><p class="title"><a href="/2021/04/26/learning-to-rank/">learning to rank中的Listwise，Pairwise和Pointwise</a></p><p class="categories"><a href="/categories/recsys/">recsys</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-24T01:38:00.000Z">2021-04-24</time></p><p class="title"><a href="/2021/04/24/recall-PinnerSage/">recall-PinnerSage</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-04-23T12:53:34.000Z">2021-04-23</time></p><p class="title"><a href="/2021/04/23/leetcode-permutation-combination/">leetcode刷题笔记-排列组合</a></p><p class="categories"><a href="/categories/leetcode/">leetcode</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2021/04/"><span class="level-start"><span class="level-item">四月 2021</span></span><span class="level-end"><span class="level-item tag">12</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/03/"><span class="level-start"><span class="level-item">三月 2021</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/02/"><span class="level-start"><span class="level-item">二月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/12/"><span class="level-start"><span class="level-item">十二月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/11/"><span class="level-start"><span class="level-item">十一月 2020</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">十月 2020</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/09/"><span class="level-start"><span class="level-item">九月 2020</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/08/"><span class="level-start"><span class="level-item">八月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/07/"><span class="level-start"><span class="level-item">七月 2020</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">六月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Data-Structure/"><span class="tag">Data Structure</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GNN/"><span class="tag">GNN</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo-Icarus/"><span class="tag">Hexo,Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NLP/"><span class="tag">NLP</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RL/"><span class="tag">RL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/binary-search/"><span class="tag">binary search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/cuda/"><span class="tag">cuda</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/datawhale/"><span class="tag">datawhale</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/deep-learning/"><span class="tag">deep learning</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/disjoint-set/"><span class="tag">disjoint set</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/entity-disambiguation/"><span class="tag">entity disambiguation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/item-recommendation/"><span class="tag">item recommendation</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/knowledge-graph/"><span class="tag">knowledge graph</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/news-recommendation/"><span class="tag">news recommendation</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/pytorch/"><span class="tag">pytorch</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/review-based-recommendation/"><span class="tag">review-based recommendation</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/text-representation/"><span class="tag">text representation</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo-1.svg" alt="Xdren&#039;s blog" height="28"></a><p class="is-size-7"><span>&copy; 2021 Xdren</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a><br><span id="busuanzi_container_site_uv">共<span id="busuanzi_value_site_uv">0</span>个访客</span></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/mhchem.js" defer></script><script>window.addEventListener("load", function() {
+            document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
+                renderMathInElement(element);
+            });
+        });</script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/"});</script></body></html>
