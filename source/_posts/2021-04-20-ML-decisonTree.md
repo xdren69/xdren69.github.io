@@ -71,7 +71,29 @@ excerpt: 本文记录了机器学习中第二个算法——决策树算法，�
 >
 >   **我们对于信息增益的定义恰好是：信息熵-条件熵。**
 
- 
+ 具体计算举例：
+
+当前样本集合 D 中第 k 类样本所占的比例为 $p_{k}$ ，则 D 的信息熵定义为：
+$$
+\operatorname{Ent}(D)=-\sum_{k=1}^{|\mathcal{Y}|} p_{k} \log _{2} p_{k}
+$$
+离散属性 a 有 V 个可能的取值 {a1,a2,…,aV}；样本集合中，属性 a 上取值为 av 的样本集合，记为 Dv；则条件熵的定义为：
+$$
+\sum_{v=1}^{V} \frac{\left|D^{v}\right|}{|D|} \operatorname{Ent}\left(\begin{array}{l}
+\left.D^{v}\right)
+\end{array}\right.
+$$
+因此最后我们得到信息增益如下：
+$$
+{\text { Gain }}(D, a)=\operatorname{Ent}(D)-\sum_{v=1}^{V} \frac{\left|D^{v}\right|}{|D|} \operatorname{Ent}\left(D^{v}\right)
+$$
+**信息增益表示得知属性 a 的信息而使得样本集合不确定度减少的程度。**
+
+因此进行特征选择时，我们**可以用信息增益来度量。**如果选择一个特征后，**信息增益最大**（**信息不确定性减少的程度最大**），**那么我们就选取这个特征。**
+
+
+
+
 
 #### C4.5算法
 
