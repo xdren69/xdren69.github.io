@@ -1,12 +1,18 @@
 ---
-title: (DICE) Disentangling User Interest and Conformity for Recommendation with Causal Embedding 论文阅读
-tags:
+title: >-
+  (DICE) Disentangling User Interest and Conformity for Recommendation with
+  Causal Embedding 论文阅读
+date: 2021-04-30 22:32:17
+toc: true
+categories:
+  - paper reading
+excerpt: 本文介绍了和向南大佬组的一篇解决现实购买物品中的conformity bias问题的论文
 ---
+
 
 ![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202103/24/105111-436109.png)
 
 >   Conformity这里可以理解为屈从性，即用户对于流行商品的追求性。
->
 
 ## 创新点
 
@@ -104,7 +110,7 @@ $$
     \begin{aligned}
     L_{\text {conformity }}^{O_{1}} &=\sum_{(u, i, j) \in O_{1}} \operatorname{BPR}\left(\left\langle\boldsymbol{u}^{(\text {con })}, \boldsymbol{i}^{(\text {con })}\right\rangle,\left\langle\boldsymbol{u}^{(\text {con })}, \boldsymbol{j}^{(\text {con })}\right\rangle\right), \\
     L_{\text {conformity }}^{O_{2}} &=\sum_{(u, i, j) \in O_{2}}-\mathrm{BPR}\left(\left\langle\boldsymbol{u}^{(\mathrm{con})}, \boldsymbol{i}^{(\mathrm{con})}\right\rangle,\left\langle\boldsymbol{u}^{(\mathrm{con})}, \boldsymbol{j}^{(\mathrm{con})}\right\rangle\right), \\
-L_{\text {conformity }}^{O_{1}+O_{2}} &=L_{\text {conformity }}^{O_{1}}+{L}_{\text {conformity }}^{O_{2}} .
+    L_{\text {conformity }}^{O_{1}+O_{2}} &=L_{\text {conformity }}^{O_{1}}+{L}_{\text {conformity }}^{O_{2}} .
     \end{aligned}  \tag{6}
     $$
     

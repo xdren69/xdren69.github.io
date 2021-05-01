@@ -1,7 +1,10 @@
 ---
-title: itemRecsys-GBDT+LR
+title: itemRecsys-GBDT+LR（未完待续）
 date: 2021-04-14 19:00:12
-tags:
+toc: true
+categories:
+  - paper reading
+excerpt: 本文介绍了FaceBook在深度学习时代降临之前提出的GBDT+LR模型
 ---
 
 

@@ -1,7 +1,12 @@
 ---
 title: (NewsBERT)Distilling Pre-trained Language Model for Intelligent News Application 论文笔记
 date: 2021-04-06 10:05:12
+toc: true
+categories:
+  - paper reading
 tags:
+  - text representation
+excerpt: 这篇论文介绍了知识蒸馏技术以及BERT在新闻领域进行知识蒸馏的应用
 ---
 
 ![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202104/06/101916-216194.png)

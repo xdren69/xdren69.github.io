@@ -1,7 +1,10 @@
 ---
-title: recall-PinnerSage
+title: PinnerSage（未完待续）
 date: 2021-04-24 09:38:00
-tags:
+toc: true
+categories:
+  - paper reading
+excerpt: 本文介绍了Pinterest解决召回问题的一系列技术变更
 ---
 
 ![](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202104/24/094135-426175.png)
@@ -106,39 +109,5 @@ tags:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->论文解读不是简单的翻译（这年头，谁还看不懂个英文呢?），而是结合自己的亲身实践，把论文中一笔带过的地方讲透，补充论文中忽略的细节，列举针对相同问题业界其他的解决方案，算是论文原文的一个补充。
 
 >   Faiss是Facebook AI团队开源的针对聚类和相似性搜索库，为稠密向量提供高效相似度搜索和聚类，支持十亿级别向量的搜索，是目前最为成熟的近似近邻搜索库。
