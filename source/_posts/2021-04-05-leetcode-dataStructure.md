@@ -55,6 +55,26 @@ def count1(num):
 
 
 
+## 树
+
+### 利用栈实现中序遍历
+
+```python
+while stack or root:
+    while root:
+        stack.append(root)
+        root = root.left
+    root = stack.pop()
+    # 这里是需要执行的主要代码
+    if root.val <= preNum:
+        return False
+    #-------------------#
+    preNum = root.val
+    root = root.right
+```
+
+
+
 ## 堆
 
 ### python调用
@@ -86,26 +106,6 @@ heap[0]
 
 
 
-## 树
-
-### 利用栈实现中序遍历
-
-```python
-while stack or root:
-    while root:
-        stack.append(root)
-        root = root.left
-    root = stack.pop()
-    # 这里是需要执行的主要代码
-    if root.val <= preNum:
-        return False
-    #-------------------#
-    preNum = root.val
-    root = root.right
-```
-
-
-
 ## 队列
 
 ### 先入先出队列
@@ -126,6 +126,15 @@ num = que.get()
 que.empty()
 ```
 
+注意：
+
+队列的判空不能用：
+
+```python
+while que:
+  pass
+```
+
 
 
 ### 优先级队列
@@ -138,6 +147,13 @@ que = queue.PriorityQueue()
 que.put((3,'ddddd'))
 order, string = que.get()
 ```
+
+
+
+>   Tips：优先级队列 VS 堆
+>
+>   1.  原理：PriorityQueue使用的就是heapq来实现的，所以可以认为两者算法本质上是一样的。当然PriorityQueue考虑到了线程安全的问题。
+>   2.  使用：通过heapq可以访问小顶堆的堆顶元素，而不弹出该元素；`queue.PriorityQueue()`一旦访问队首元素就必须弹出
 
 
 

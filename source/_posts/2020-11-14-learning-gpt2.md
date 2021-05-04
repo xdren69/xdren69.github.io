@@ -17,6 +17,8 @@ excerpt: 这是一篇对于GPT-2模型的学习笔记
 2.  Decoder详解：详解单个decoder中的计算原理
 3.  GPT-2的应用：详解模型如何在实际中进行应用
 
+
+
 ## 整体模型
 
 ![GPT-2](https://gitblog-1302688916.cos.ap-beijing.myqcloud.com/cs224n/202011/15/161733-313323.png)
