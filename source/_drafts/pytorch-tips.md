@@ -121,4 +121,56 @@ torch.mm的broadcast版本，可以进行高维矩阵的乘法，举例如下：
 ## tensor维度裁剪
 
 -   torch.squeeze()的用法：将输入张量形状中的1去除并返回。 如果输入是形如(A×1×B×1×C×1×D)，那么输出形状就为： (A×B×C×D)
+
+    >   注意：如果不特殊指明维度，会消除所有值为1的维度，谨慎使用！！！否则会出错
+
 -   torch.unsqueeze(tensor, dim)用于在指定的dim处扩充一个维度，维数是1
+
+
+
+## RNN 变长序列
+
+1.  pad_sequence：将一个batch中的数据填充成相同的长度
+2.  pack_padded_sequence：消除pad，对序列化数据进行压缩
+3.  pad_packed_sequence：将RNN返回的packedSequence转化为RNN的标准输出
+
+
+
+
+
+## DGL使用
+
+>   Tip1: DGL初始化为一张空图时，不能添加节点和边，可能是bug
+
+
+
+
+
+## GPU
+
+1.  model移动到gpu之上的代码：
+
+    ```python
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    ```
+
+    
+
+2.  不同于model，tensor移动到gpu需要进行赋值操作
+
+    ```
+    mytensor = my_tensor.to(device)
+    ```
+
+    
+
+
+
+
+
+
+## reference
+
+[1] [Pytorch的to(device)用法](https://blog.csdn.net/weixin_36670529/article/details/103995898)
+
